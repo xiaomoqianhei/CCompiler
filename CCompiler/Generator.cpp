@@ -446,7 +446,6 @@ namespace Yradex
 					_print_instruction("add", "$v0", "$v0", addr);
 				}
 
-
 				if (ins.argument_1->get_function() != FunctionIdentifier::global)
 				{
 					_print_instruction("add", "$v0", "$v0", "$fp");
@@ -475,13 +474,13 @@ namespace Yradex
 
 				if (ins.argument_1->is_const())
 				{
-					_print_instruction("add", "$v0", "$zero", ins.argument_1->get_value() * 4);
+					_print_instruction("add", "$v0", "$zero", ins.result->position() + ins.argument_1->get_value() * 4);
 				}
 				else
 				{
 					_print_instruction("mul", "$v0", index, 4);
+					_print_instruction("add", "$v0", "$v0", ins.result->position());
 				}
-				_print_instruction("add", "$v0", "$v0", ins.result->position());
 
 				if (!(ins.result->get_function() == FunctionIdentifier::global))
 				{

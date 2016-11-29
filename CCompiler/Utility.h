@@ -16,7 +16,7 @@ namespace Yradex
 			const static bool lexical_analyzer_debug = false;
 			const static bool parser_debug = false;
 			const static bool pseudo_table_debug = false;
-			const static bool generator_debug = true;
+			const static bool generator_debug = false;
 		};
 
 		template <typename T>
@@ -27,8 +27,6 @@ namespace Yradex
 				return static_cast<typename std::underlying_type<T>::type>(t);
 			}
 		};
-
-		
 
 	}
 }
