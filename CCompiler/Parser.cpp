@@ -1048,6 +1048,13 @@ namespace Yradex
 				_insert_instruction(PseudoInstruction(PseudoOperator::arg, v, Variable::null, Variable::null));
 			}
 
+			if (_get_function_detail(name)->get_return_type() == Symbol::void_symbol)
+			{
+				_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null, Variable::null));
+				_debug("Generated function call");
+				return Variable::null;
+			}
+
 			auto res = _declear_temp_variable(Symbol::int_symbol);
 			_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null, res));
 			_debug("Generated function call");
@@ -1199,6 +1206,11 @@ namespace Yradex
 				else if (_lexical_analyzer.last() == Symbol::left_parenthesis)
 				{
 					res = _parse_function_call(name);
+					if (res == Variable::null)
+					{
+						_error(Error::use_return_value_of_void_function);
+						res = _get_literal(1);
+					}
 				}
 				// ȡֵ
 				else

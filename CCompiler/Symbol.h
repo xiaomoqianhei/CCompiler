@@ -141,7 +141,7 @@ namespace Yradex
 					|| symbol == Symbol::greater_equal;
 			}
 
-			static Symbol type_after_calculate(Symbol la, Symbol ra)
+			static Symbol type_after_calculate(Symbol, Symbol)
 			{
 				//if (la == Symbol::int_symbol || ra == Symbol::int_symbol)
 				//{

@@ -38,6 +38,7 @@ namespace Yradex
 			assign_to_const,
 			array_as_argument,
 			illegal_argument_list,
+			use_return_value_of_void_function,
 		};
 
 		template <typename C>
@@ -71,6 +72,7 @@ namespace Yradex
 				{ Error::assign_to_const, "assign_to_const" },
 				{ Error::array_as_argument, "array_as_argument" },
 				{ Error::illegal_argument_list, "illegal_argument_list" },
+				{ Error::use_return_value_of_void_function, "use_return_value_of_void_function" },
 			};
 
 			s << map.at(e);

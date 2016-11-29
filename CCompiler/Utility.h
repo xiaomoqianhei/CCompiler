@@ -16,7 +16,7 @@ namespace Yradex
 			const static bool lexical_analyzer_debug = false;
 			const static bool parser_debug = false;
 			const static bool pseudo_table_debug = false;
-			const static bool generator_debug = false;
+			const static bool generator_debug = true;
 		};
 
 		template <typename T>

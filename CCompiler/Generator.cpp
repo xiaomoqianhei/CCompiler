@@ -73,9 +73,6 @@ namespace Yradex
 			_stream << std::endl << std::endl << 
 				_table.get_current_function_identifier().get_name() << ":" << std::endl;
 
-			// move fp
-			_print_instruction("add", "$fp", "$zero", "$sp");
-
 			int relative_sp = -8 - _table.get_current_function_detail()->get_parameter_list().size() * 4;
 
 			// save $s0 - $s7 registers
@@ -340,6 +337,7 @@ namespace Yradex
 				break;
 			case PseudoOperator::call:
 			{
+				// save a0 - a3
 				_try_save_argument_register();
 
 				// save fp
@@ -359,16 +357,20 @@ namespace Yradex
 				_print_instruction("lw", "$ra", "-8($sp)");
 
 				// res
-				auto res = ins.result;
-				if (res->in_register())
+				if (ins.result != Variable::null)
 				{
-					_print_instruction("add", res->address_as_string(), "$zero", "$v0");
-				}
-				else
-				{
-					_print_instruction("sw", "$v0", res->address_as_string());
+					auto res = ins.result;
+					if (res->in_register())
+					{
+						_print_instruction("add", res->address_as_string(), "$zero", "$v0");
+					}
+					else
+					{
+						_print_instruction("sw", "$v0", res->address_as_string());
+					}
 				}
 
+				// recover a0 - a3
 				auto this_arg_count = _table.get_current_function_detail()->get_parameter_list().size();
 				if (this_arg_count)
 				{
