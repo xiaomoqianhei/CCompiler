@@ -103,7 +103,7 @@ namespace Yradex
 			}
 
 			// move sp
-			_print_instruction("add", "$sp", "$sp", lowest_sp);
+			_print_instruction("add", "$sp", "$sp", lowest_sp - 4);
 
 			// generate ins
 			auto list = _table.get_instruction_list();
@@ -284,13 +284,11 @@ namespace Yradex
 				{
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
 					{
-						_print_instruction("sub", "$sp", "$sp", 4);			// -sp
 						_print_instruction("sw", "$a0", "($sp)");			// store a0
 						_print_instruction("la", "$a0", ins.argument_1);	// load a0
 						_print_instruction("add", "$v0", "$zero", "4");		// syscall
 						_print_instruction("syscall");
 						_print_instruction("lw", "$a0", "($sp)");			// load a0
-						_print_instruction("add", "$sp", "$sp", 4);
 					}
 					else
 					{
@@ -305,7 +303,6 @@ namespace Yradex
 					auto a2 = _get_argument_2(ins);
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
 					{
-						_print_instruction("sub", "$sp", "$sp", 4);			// -sp
 						_print_instruction("sw", "$a0", "($sp)");			// store a0
 						_print_instruction("add", "$a0", "$zero", a2);	// load a0
 						if (ins.argument_2->get_type() == Symbol::int_symbol)
@@ -318,7 +315,6 @@ namespace Yradex
 						}
 						_print_instruction("syscall");
 						_print_instruction("lw", "$a0", "($sp)");			// load a0
-						_print_instruction("add", "$sp", "$sp", 4);
 					}
 					else
 					{
@@ -356,7 +352,7 @@ namespace Yradex
 				// recover ra
 				_print_instruction("lw", "$ra", "-8($sp)");
 
-				// res
+				// return value
 				if (ins.result != Variable::null)
 				{
 					auto res = ins.result;
@@ -392,7 +388,7 @@ namespace Yradex
 				_print_instruction("add", "$v0", "$zero", va);
 
 				// recover registers
-				int relative_sp = 0;
+				int relative_sp = 4;
 				size_t i = _table.get_max_used_register();
 				for (; i >= 16; --i)
 				{
