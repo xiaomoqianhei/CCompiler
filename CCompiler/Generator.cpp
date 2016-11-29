@@ -376,7 +376,10 @@ namespace Yradex
 						s << i * 4 << "($sp)";
 						_print_instruction("lw", VariableAddress(true, i + 4), s.str());
 					}
-					_print_instruction("add", "$sp", "$sp", 4 * this_arg_count);
+					if (this_arg_count != 1)
+					{
+						_print_instruction("add", "$sp", "$sp", 4 * this_arg_count);
+					}
 				}
 
 				_arg_count = 0;
@@ -538,7 +541,10 @@ namespace Yradex
 				auto this_arg_count = _table.get_current_function_detail()->get_parameter_list().size();
 				if (this_arg_count)
 				{
-					_print_instruction("sub", "$sp", "$sp", 4 * this_arg_count);
+					if (this_arg_count != 1)
+					{
+						_print_instruction("sub", "$sp", "$sp", 4 * this_arg_count);
+					}
 					for (size_t i = 0; i < this_arg_count; ++i)
 					{
 						std::ostringstream s;
