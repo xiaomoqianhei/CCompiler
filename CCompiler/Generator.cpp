@@ -1,0 +1,598 @@
+#include "Generator.h"
+
+
+namespace Yradex
+{
+	namespace CCompiler
+	{
+		void Generator::_generate_data()
+		{
+			_stream << _separator << ".data" << std::endl;
+			
+			int position = 0x10010000;
+			// global variables
+			auto set = _table.get_global_variable_set();
+			for (auto &v : set)
+			{
+				if (v->is_const())
+				{
+					continue;
+				}
+				v->set_address(VariableAddress(false, position));
+				int size = 4 * std::max(1u, v->get_length());
+				position += size;
+
+				_stream << v->get_name() << ":" << _separator
+					<< ".space" << _separator 
+					<< size << std::endl;
+			}
+
+			// strings
+			auto map = _table.get_string_map();
+			for (auto &v : map)
+			{
+				_stream << v.first->get_name() << ":" << _separator
+					<< ".asciiz" << _separator
+					<< "\"" << v.second << "\"" << std::endl;
+			}
+		}
+		void Generator::_generate_text()
+		{
+			_stream << _separator << ".text" << std::endl;
+
+			// global init
+			_print_instruction("add", "$fp", "$sp", "$zero");
+			_print_instruction("la", "$ra", "finish");
+
+			// main func
+			{
+				PseudoTable::PseudoTableFunctionSwitcher switcher = 
+					PseudoTable::PseudoTableFunctionSwitcher(_table, string_type("main"));
+				_generate_function();
+			}
+
+			// other func
+			auto function_list = _table.get_function_list();
+			for (auto &f : function_list)
+			{
+				if (f == string_type("main"))
+				{
+					continue;
+				}
+				PseudoTable::PseudoTableFunctionSwitcher switcher =
+					PseudoTable::PseudoTableFunctionSwitcher(_table, f);
+				_generate_function();
+			}
+
+			// ending
+			_stream << "finish:" << std::endl;
+		}
+		void Generator::_generate_function()
+		{
+			// function name
+			_stream << std::endl << std::endl << 
+				_table.get_current_function_identifier().get_name() << ":" << std::endl;
+
+			// move fp
+			_print_instruction("add", "$fp", "$zero", "$sp");
+
+			int relative_sp = -8 - _table.get_current_function_detail()->get_parameter_list().size() * 4;
+
+			// save $s0 - $s7 registers
+			size_t i = 16;
+			for (; i <= _table.get_max_used_register(); ++i)
+			{
+				relative_sp -= 4;
+				std::ostringstream s;
+				s << relative_sp << "($sp)";
+				_print_instruction("sw", VariableAddress(true, i), s.str());
+			}
+
+			// modify addresses of variables
+			int lowest_sp = relative_sp;
+			auto variable_set = _table.get_variable_set();
+			for (auto &v : variable_set)
+			{
+				if (v->get_variable_type() != VariableType::array && v->get_variable_type() != VariableType::variable)
+				{
+					continue;
+				}
+
+				if (!v->in_register())
+				{
+					v->set_address(VariableAddress(false, v->position() - 4 * (i - 16)));
+					lowest_sp = std::min(lowest_sp, v->position());
+				}
+			}
+
+			// move sp
+			_print_instruction("add", "$sp", "$sp", lowest_sp);
+
+			// generate ins
+			auto list = _table.get_instruction_list();
+			for (auto &ins : list)
+			{
+				_generate_instruction(ins);
+			}
+
+		}
+		void Generator::_generate_instruction(PseudoInstruction & ins)
+		{
+			// print pseudo code
+			if (Config::generator_debug && error_handler_type::instance().should_raise(error_handler_type::Level::debug))
+			{
+				_stream << " " << _separator << "# " << ins << std::endl;
+			}
+
+			switch (ins.operator_)
+			{
+			case PseudoOperator::add:
+			{
+
+				_rearrange_instruction(ins);
+
+				string_type a1 = _get_argument_1(ins);
+				string_type a2 = _get_argument_2(ins);
+
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("add", res->address_as_string(), a1, a2);
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("add", res_new, a1, a2);
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::sub:
+			{
+				string_type a1 = _get_argument_1(ins);
+
+				if (ins.argument_1->is_const())
+				{
+					_print_instruction("add", "$v0", "$zero", a1);
+					a1 = "$v0";
+				}
+
+				string_type a2 = _get_argument_2(ins);
+
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("sub", res->address_as_string(), a1, a2);
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("sub", res_new, a1, a2);
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::mul:
+			{
+
+				_rearrange_instruction(ins);
+
+				string_type a1 = _get_argument_1(ins);
+				string_type a2 = _get_argument_2(ins);
+
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("mul", res->address_as_string(), a1, a2);
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("mul", res_new, a1, a2);
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::div:
+			{
+				// arg1
+				string_type a1 = _get_argument_1(ins);
+
+				if (ins.argument_1->is_const())
+				{
+					_print_instruction("add", "$v0", "$zero", a1);
+					a1 = "$v0";
+				}
+
+				// arg2
+				string_type a2 = _get_argument_2(ins);
+
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("div", res->address_as_string(), a1, a2);
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("div", res_new, a1, a2);
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::b:
+				_print_instruction("b", ins.argument_1);
+				break;
+			case PseudoOperator::beq:
+			{
+				_rearrange_instruction(ins);
+				string_type a1 = _get_argument_1(ins);
+				string_type a2 = _get_argument_2(ins);
+				_print_instruction("beq", a1, a2, ins.result);
+				break;
+			}
+			case PseudoOperator::bne:
+			{
+				_rearrange_instruction(ins);
+				string_type a1 = _get_argument_1(ins);
+				string_type a2 = _get_argument_2(ins);
+				_print_instruction("bne", a1, a2, ins.result);
+				break;
+			}
+			case PseudoOperator::bltz:
+			{
+				string_type a1 = _get_argument_1(ins);
+				_print_instruction("bltz", a1, ins.result);
+				break;
+			}
+			case PseudoOperator::blez:
+			{
+				string_type a1 = _get_argument_1(ins);
+				_print_instruction("blez", a1, ins.result);
+				break;
+			}
+			case PseudoOperator::bgtz:
+			{
+				string_type a1 = _get_argument_1(ins);
+				_print_instruction("bgtz", a1, ins.result);
+				break;
+			}
+			case PseudoOperator::bgez:
+			{
+				string_type a1 = _get_argument_1(ins);
+				_print_instruction("bgez", a1, ins.result);
+				break;
+			}
+			case PseudoOperator::read:
+			{
+				_print_instruction("add", "$v0", "$zero", "5");
+				_print_instruction("syscall");
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("add", res->address_as_string(), "$zero", "$v0");
+				}
+				else
+				{
+					_print_instruction("sw", "$v0", res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::print:
+				// string
+				if (ins.argument_1 != Variable::null)
+				{
+					if (!_table.get_current_function_detail()->get_parameter_list().empty())
+					{
+						_print_instruction("sub", "$sp", "$sp", 4);			// -sp
+						_print_instruction("sw", "$a0", "($sp)");			// store a0
+						_print_instruction("la", "$a0", ins.argument_1);	// load a0
+						_print_instruction("add", "$v0", "$zero", "4");		// syscall
+						_print_instruction("syscall");
+						_print_instruction("lw", "$a0", "($sp)");			// load a0
+						_print_instruction("add", "$sp", "$sp", 4);
+					}
+					else
+					{
+						_print_instruction("la", "$a0", ins.argument_1);	// load a0
+						_print_instruction("add", "$v0", "$zero", "4");		// syscall
+						_print_instruction("syscall");
+					}
+				}
+				// variable
+				if (ins.argument_2 != Variable::null)
+				{
+					auto a2 = _get_argument_2(ins);
+					if (!_table.get_current_function_detail()->get_parameter_list().empty())
+					{
+						_print_instruction("sub", "$sp", "$sp", 4);			// -sp
+						_print_instruction("sw", "$a0", "($sp)");			// store a0
+						_print_instruction("add", "$a0", "$zero", a2);	// load a0
+						if (ins.argument_2->get_type() == Symbol::int_symbol)
+						{
+							_print_instruction("add", "$v0", "$zero", "1");		// syscall
+						}
+						else
+						{
+							_print_instruction("add", "$v0", "$zero", "11");		// syscall
+						}
+						_print_instruction("syscall");
+						_print_instruction("lw", "$a0", "($sp)");			// load a0
+						_print_instruction("add", "$sp", "$sp", 4);
+					}
+					else
+					{
+						_print_instruction("add", "$a0", "$zero", a2);	// load a0
+						if (ins.argument_2->get_type() == Symbol::int_symbol)
+						{
+							_print_instruction("add", "$v0", "$zero", "1");		// syscall
+						}
+						else
+						{
+							_print_instruction("add", "$v0", "$zero", "11");		// syscall
+						}
+						_print_instruction("syscall");
+					}
+				}
+				break;
+			case PseudoOperator::call:
+			{
+				_try_save_argument_register();
+
+				// save fp
+				_print_instruction("sw", "$fp", "-4($sp)");
+				_print_instruction("add", "$fp", "$sp", "$zero");
+
+				// save ra
+				_print_instruction("sw", "$ra", "-8($sp)");
+
+				// CALL
+				_print_instruction("jal", ins.argument_1);
+
+				// recover fp
+				_print_instruction("lw", "$fp", "-4($sp)");
+
+				// recover ra
+				_print_instruction("lw", "$ra", "-8($sp)");
+
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("add", res->address_as_string(), "$zero", "$v0");
+				}
+				else
+				{
+					_print_instruction("sw", "$v0", res->address_as_string());
+				}
+
+				auto this_arg_count = _table.get_current_function_detail()->get_parameter_list().size();
+				if (this_arg_count)
+				{
+					for (size_t i = 0; i < this_arg_count; ++i)
+					{
+						std::ostringstream s;
+						s << i * 4 << "($sp)";
+						_print_instruction("lw", VariableAddress(true, i + 4), s.str());
+					}
+					_print_instruction("add", "$sp", "$sp", 4 * this_arg_count);
+				}
+
+				_arg_count = 0;
+				break;
+			}
+			case PseudoOperator::ret:
+			{
+				auto va = _get_argument_1(ins);
+				_print_instruction("add", "$v0", "$zero", va);
+
+				// recover registers
+				int relative_sp = 0;
+				size_t i = _table.get_max_used_register();
+				for (; i >= 16; --i)
+				{
+					std::ostringstream s;
+					s << relative_sp << "($sp)";
+					relative_sp += 4;
+					_print_instruction("lw", VariableAddress(true, i), s.str());
+				}
+
+				// move sp
+				_print_instruction("add", "$sp", "$fp", "$zero");
+
+				// return
+				_print_instruction("jr", "$ra");
+				break;
+			}
+			case PseudoOperator::label:
+				_stream << ins.argument_1 << ":" << std::endl;
+				break;
+			case PseudoOperator::assign:
+			{
+				// arg1
+				string_type a1 = _get_argument_1(ins);
+
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("add", res->address_as_string(), "$zero", a1);
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("add", res_new, "$zero", a1);
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::load:
+			{
+				// FIX
+				int addr = ins.argument_1->position();
+				if (ins.argument_2->is_const())
+				{
+					addr += ins.argument_2->get_value() * 4;
+					_print_instruction("add", "$v0", "$zero", addr);
+				}
+				else
+				{
+					string_type a2 = _get_argument_2(ins);
+					_print_instruction("mul", "$v0", a2, 4);
+					_print_instruction("add", "$v0", "$v0", addr);
+				}
+
+
+				if (ins.argument_1->get_function() != FunctionIdentifier::global)
+				{
+					_print_instruction("add", "$v0", "$v0", "$fp");
+				}
+
+				// res
+				auto res = ins.result;
+				if (res->in_register())
+				{
+					_print_instruction("lw", res->address_as_string(), "($v0)");
+				}
+				else
+				{
+					VariableAddress res_new = VariableAddress(true, 2);
+					_print_instruction("lw", res_new, "($v0)");
+					_print_instruction("sw", res_new, res->address_as_string());
+				}
+				break;
+			}
+			case PseudoOperator::store:
+			{
+				// FIX
+
+				string_type index = _get_argument_1(ins);
+				string_type value = _get_argument_2(ins);
+
+				if (ins.argument_1->is_const())
+				{
+					_print_instruction("add", "$v0", "$zero", ins.argument_1->get_value() * 4);
+				}
+				else
+				{
+					_print_instruction("mul", "$v0", index, 4);
+				}
+				_print_instruction("add", "$v0", "$v0", ins.result->position());
+
+				if (!(ins.result->get_function() == FunctionIdentifier::global))
+				{
+					_print_instruction("add", "$v0", "$v0", "$fp");
+				}				
+
+				if (ins.argument_2->is_const())
+				{
+					_print_instruction("add", VariableAddress(true, 3), "$zero", value);
+					_print_instruction("sw", VariableAddress(true, 3), "($v0)");
+				}
+				else
+				{
+					_print_instruction("sw", value, "($v0)");
+				}
+
+				break;
+			}
+			case PseudoOperator::arg:
+				_try_save_argument_register();
+
+				if (_arg_count < 4)
+				{
+					string_type value = _get_argument_1(ins);
+					_print_instruction("add", VariableAddress(true, _arg_count + 4), "$zero", value);
+				}
+				else
+				{
+					string_type value = _get_argument_1(ins);
+					std::ostringstream stream;
+					stream << static_cast<int>(_arg_count - 4) * -4 - 12 << "($sp)";
+					_print_instruction("sw", value, stream.str());
+				}
+				++_arg_count;
+				break;
+			case PseudoOperator::nop:
+				break;
+			default:
+				break;
+			}
+		}
+		void Generator::_rearrange_instruction(PseudoInstruction & ins)
+		{
+			if (ins.argument_1 == Variable::null || ins.argument_2 == Variable::null)
+			{
+				return;
+			}
+			if (ins.argument_1->is_const())
+			{
+				std::swap(ins.argument_1, ins.argument_2);
+			}
+		}
+		void Generator::_try_save_argument_register()
+		{
+			if (_arg_count == 0)
+			{
+				auto this_arg_count = _table.get_current_function_detail()->get_parameter_list().size();
+				if (this_arg_count)
+				{
+					_print_instruction("sub", "$sp", "$sp", 4 * this_arg_count);
+					for (size_t i = 0; i < this_arg_count; ++i)
+					{
+						std::ostringstream s;
+						s << i * 4 << "($sp)";
+						_print_instruction("sw", VariableAddress(true, i + 4), s.str());
+					}
+				}
+			}
+		}
+		Generator::string_type Generator::_get_argument_1(PseudoInstruction & ins)
+		{
+			if (ins.argument_1->is_const())
+			{
+				std::ostringstream stream;
+				stream << ins.argument_1->get_value();
+				return stream.str();
+			}
+			else
+			{
+				auto ta = ins.argument_1;
+				if (!ta->in_register())
+				{
+					_print_instruction("lw", "$v0", ta->address_as_string());
+					return "$v0";
+				}
+				return ta->address_as_string();
+			}
+		}
+		Generator::string_type Generator::_get_argument_2(PseudoInstruction & ins)
+		{
+			if (ins.argument_2->is_const())
+			{
+				std::ostringstream stream;
+				stream << ins.argument_2->get_value();
+				return stream.str();
+			}
+			else
+			{
+				auto ta = ins.argument_2;
+				if (!ta->in_register())
+				{
+					_print_instruction("lw", "$v1", ta->address_as_string());
+					return "$v1";
+				}
+				return ta->address_as_string();
+			}
+		}
+		void Generator::generate()
+		{
+			_generate_data();
+			_generate_text();
+		}
+
+	}
+}
