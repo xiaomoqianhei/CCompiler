@@ -84,6 +84,7 @@ namespace Yradex
 				s << relative_sp << "($sp)";
 				_print_instruction(MipsOperator::sw, VariableAddress(true, i), s.str());
 			}
+			_lower_address_of_saved_s_register_to_fp = relative_sp;
 
 			// modify addresses of variables
 			int lowest_sp = relative_sp;
@@ -396,12 +397,12 @@ namespace Yradex
 				_print_instruction(MipsOperator::add, "$v0", "$zero", va);
 
 				// recover registers
-				int relative_sp = 4;
+				int relative_sp = _lower_address_of_saved_s_register_to_fp;
 				size_t i = _table.get_max_used_register();
 				for (; i >= 16; --i)
 				{
 					std::ostringstream s;
-					s << relative_sp << "($sp)";
+					s << relative_sp << "($fp)";
 					relative_sp += 4;
 					_print_instruction(MipsOperator::lw, VariableAddress(true, i), s.str());
 				}
@@ -509,6 +510,7 @@ namespace Yradex
 				_try_save_argument_register();
 				string_type value = _get_argument_1(ins);
 
+				// if a? was wrote earlier then load it from stack
 				if (ins.argument_1->in_register())
 				{
 					int pos = ins.argument_1->position();

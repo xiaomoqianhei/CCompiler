@@ -20,6 +20,7 @@ namespace Yradex
 			std::basic_ostream<char_type> &_stream;
 
 			size_t _arg_count = 0;
+			int _lower_address_of_saved_s_register_to_fp;
 			string_type _separator = "\t\t";
 
 		private:

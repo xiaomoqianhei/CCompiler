@@ -617,7 +617,7 @@ namespace Yradex
 			}
 			else
 			{
-				_error(Error::invalid_identifier);
+				_error(Error::invalid_operator);
 				_lexical_analyzer.skip_to_next_statement();
 			}
 		}
@@ -1029,14 +1029,14 @@ namespace Yradex
 			{
 				_error(Error::identifier_not_defined);
 				_lexical_analyzer.next();
-				return Variable::null;
+				return _get_literal(1);
 			}
 
 			if (_get_function_detail(name)->get_parameter_list().size() != arg_list.size())
 			{
 				_error(Error::illegal_argument_list);
 				_lexical_analyzer.next();
-				return Variable::null;
+				return _get_literal(1);
 			}
 
 			_lexical_analyzer.next();
