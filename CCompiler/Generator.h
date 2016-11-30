@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PseudoTable.h"
+#include "MipsOperator.h"
 
 namespace Yradex
 {
@@ -33,19 +34,20 @@ namespace Yradex
 			string_type _get_argument_1(PseudoInstruction &ins);
 			string_type _get_argument_2(PseudoInstruction &ins);
 
-			void _print_instruction(const string_type &op)
+			//template<typename T>
+			void _print_instruction(MipsOperator op)
 			{
 				_stream << _separator << op << std::endl;
 			}
 
 			template<typename T>
-			void _print_instruction(const string_type &op, const T &arg1)
+			void _print_instruction(MipsOperator op, const T &arg1)
 			{
 				_stream << _separator << op << _separator << arg1 << std::endl;
 			}
 
 			template<typename T, typename U>
-			void _print_instruction(const string_type &op, const T &arg1, const U &arg2)
+			void _print_instruction(MipsOperator op, const T &arg1, const U &arg2)
 			{
 				_stream << _separator << op
 					<< _separator << arg1 << ","
@@ -54,7 +56,7 @@ namespace Yradex
 			}
 
 			template<typename T, typename U, typename V>
-			void _print_instruction(const string_type &op, const T &arg1, const U &arg2, const V &arg3)
+			void _print_instruction(MipsOperator op, const T &arg1, const U &arg2, const V &arg3)
 			{
 				_stream << _separator << op
 					<< _separator << arg1 << ","

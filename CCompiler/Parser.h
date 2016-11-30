@@ -110,7 +110,7 @@ namespace Yradex
 
 		public:
 			Parser(PseudoTable &pseudo_table, const std::string &file_to_compile)
-				: _pseudo_table(pseudo_table), _filename(file_to_compile), _lexical_analyzer(_filename)
+				: _filename(file_to_compile), _lexical_analyzer(_filename), _pseudo_table(pseudo_table)
 			{
 			}
 

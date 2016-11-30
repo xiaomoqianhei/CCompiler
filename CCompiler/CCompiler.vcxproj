@@ -150,6 +150,7 @@
     <ClInclude Include="Error.h" />
     <ClInclude Include="FunctionDetail.h" />
     <ClInclude Include="Generator.h" />
+    <ClInclude Include="MipsOperator.h" />
     <ClInclude Include="Optimizer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="FunctionIdentifier.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="LexicalAnalyzer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MipsOperator.cpp" />
     <ClCompile Include="Optimizer.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="BasicErrorHandler.cpp" />

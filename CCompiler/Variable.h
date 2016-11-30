@@ -90,24 +90,24 @@ namespace Yradex
 			VariableAddress _addr;
 			FunctionIdentifier _function;
 
-		public:			
+		public:
 			static const std::shared_ptr<Variable> null;
 
 		public:
 			Variable(const string_type &name, Symbol return_type, VariableType variable_type,
 				size_t length, int value, const FunctionIdentifier &function, bool is_temp)
 				: _name(name), _return_type(return_type), _array_length(length),
-				_variable_type(variable_type), _value(value), _function(function), _is_temp(is_temp)
+				_variable_type(variable_type), _value(value), _is_temp(is_temp), _function(function)
 			{
 			}
 
-			static std::shared_ptr<Variable> 
-				new_const_variable(const string_type &name, Symbol type, 
+			static std::shared_ptr<Variable>
+				new_const_variable(const string_type &name, Symbol type,
 					int value, const FunctionIdentifier &function, bool is_temp)
 			{
 				return std::make_shared<Variable>(name, type, VariableType::const_variable, 0, value, function, is_temp);
 			}
-			static std::shared_ptr<Variable> 
+			static std::shared_ptr<Variable>
 				new_variale(const string_type &name, Symbol type,
 					const FunctionIdentifier &function, bool is_temp)
 			{
@@ -159,7 +159,7 @@ namespace Yradex
 			{
 				_function = f;
 			}
-		
+
 			size_t get_length() const
 			{
 				return _array_length;

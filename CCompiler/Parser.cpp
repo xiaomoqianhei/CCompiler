@@ -117,13 +117,11 @@ namespace Yradex
 				}
 				if (length == -1)
 				{
-					type;
 					_declear_variable(identifier_name, type);
 					_debug("Variable defination: " + identifier_name + " of type ", type);
 				}
 				else
 				{
-					type;
 					_declear_array(identifier_name, type, length);
 					_debug("Array defination: " + identifier_name + " of length ", length, " type ", type);
 				}

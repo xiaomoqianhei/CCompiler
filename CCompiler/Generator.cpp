@@ -41,8 +41,8 @@ namespace Yradex
 			_stream << _separator << ".text" << std::endl;
 
 			// global init
-			_print_instruction("add", "$fp", "$sp", "$zero");
-			_print_instruction("la", "$ra", "finish");
+			_print_instruction(MipsOperator::add, "$fp", "$sp", "$zero");
+			_print_instruction(MipsOperator::la, "$ra", "finish");
 
 			// main func
 			{
@@ -82,7 +82,7 @@ namespace Yradex
 				relative_sp -= 4;
 				std::ostringstream s;
 				s << relative_sp << "($sp)";
-				_print_instruction("sw", VariableAddress(true, i), s.str());
+				_print_instruction(MipsOperator::sw, VariableAddress(true, i), s.str());
 			}
 
 			// modify addresses of variables
@@ -103,7 +103,7 @@ namespace Yradex
 			}
 
 			// move sp
-			_print_instruction("add", "$sp", "$sp", lowest_sp - 4);
+			_print_instruction(MipsOperator::add, "$sp", "$sp", lowest_sp - 4);
 
 			// generate ins
 			auto list = _table.get_instruction_list();
@@ -135,13 +135,13 @@ namespace Yradex
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("add", res->address_as_string(), a1, a2);
+					_print_instruction(MipsOperator::add, res->address_as_string(), a1, a2);
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("add", res_new, a1, a2);
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::add, res_new, a1, a2);
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
@@ -151,7 +151,7 @@ namespace Yradex
 
 				if (ins.argument_1->is_const())
 				{
-					_print_instruction("add", "$v0", "$zero", a1);
+					_print_instruction(MipsOperator::add, "$v0", "$zero", a1);
 					a1 = "$v0";
 				}
 
@@ -160,13 +160,13 @@ namespace Yradex
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("sub", res->address_as_string(), a1, a2);
+					_print_instruction(MipsOperator::sub, res->address_as_string(), a1, a2);
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("sub", res_new, a1, a2);
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::sub, res_new, a1, a2);
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
@@ -181,13 +181,13 @@ namespace Yradex
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("mul", res->address_as_string(), a1, a2);
+					_print_instruction(MipsOperator::mul, res->address_as_string(), a1, a2);
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("mul", res_new, a1, a2);
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::mul, res_new, a1, a2);
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
@@ -198,7 +198,7 @@ namespace Yradex
 
 				if (ins.argument_1->is_const())
 				{
-					_print_instruction("add", "$v0", "$zero", a1);
+					_print_instruction(MipsOperator::add, "$v0", "$zero", a1);
 					a1 = "$v0";
 				}
 
@@ -209,25 +209,25 @@ namespace Yradex
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("div", res->address_as_string(), a1, a2);
+					_print_instruction(MipsOperator::div, res->address_as_string(), a1, a2);
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("div", res_new, a1, a2);
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::div, res_new, a1, a2);
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
 			case PseudoOperator::b:
-				_print_instruction("b", ins.argument_1);
+				_print_instruction(MipsOperator::b, ins.argument_1);
 				break;
 			case PseudoOperator::beq:
 			{
 				_rearrange_instruction(ins);
 				string_type a1 = _get_argument_1(ins);
 				string_type a2 = _get_argument_2(ins);
-				_print_instruction("beq", a1, a2, ins.result);
+				_print_instruction(MipsOperator::beq, a1, a2, ins.result);
 				break;
 			}
 			case PseudoOperator::bne:
@@ -235,46 +235,46 @@ namespace Yradex
 				_rearrange_instruction(ins);
 				string_type a1 = _get_argument_1(ins);
 				string_type a2 = _get_argument_2(ins);
-				_print_instruction("bne", a1, a2, ins.result);
+				_print_instruction(MipsOperator::bne, a1, a2, ins.result);
 				break;
 			}
 			case PseudoOperator::bltz:
 			{
 				string_type a1 = _get_argument_1(ins);
-				_print_instruction("bltz", a1, ins.result);
+				_print_instruction(MipsOperator::bltz, a1, ins.result);
 				break;
 			}
 			case PseudoOperator::blez:
 			{
 				string_type a1 = _get_argument_1(ins);
-				_print_instruction("blez", a1, ins.result);
+				_print_instruction(MipsOperator::blez, a1, ins.result);
 				break;
 			}
 			case PseudoOperator::bgtz:
 			{
 				string_type a1 = _get_argument_1(ins);
-				_print_instruction("bgtz", a1, ins.result);
+				_print_instruction(MipsOperator::bgtz, a1, ins.result);
 				break;
 			}
 			case PseudoOperator::bgez:
 			{
 				string_type a1 = _get_argument_1(ins);
-				_print_instruction("bgez", a1, ins.result);
+				_print_instruction(MipsOperator::bgez, a1, ins.result);
 				break;
 			}
 			case PseudoOperator::read:
 			{
-				_print_instruction("add", "$v0", "$zero", "5");
-				_print_instruction("syscall");
+				_print_instruction(MipsOperator::add, "$v0", "$zero", "5");
+				_print_instruction(MipsOperator::syscall);
 				// res
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("add", res->address_as_string(), "$zero", "$v0");
+					_print_instruction(MipsOperator::add, res->address_as_string(), "$zero", "$v0");
 				}
 				else
 				{
-					_print_instruction("sw", "$v0", res->address_as_string());
+					_print_instruction(MipsOperator::sw, "$v0", res->address_as_string());
 				}
 				break;
 			}
@@ -284,17 +284,17 @@ namespace Yradex
 				{
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
 					{
-						_print_instruction("sw", "$a0", "($sp)");			// store a0
-						_print_instruction("la", "$a0", ins.argument_1);	// load a0
-						_print_instruction("add", "$v0", "$zero", "4");		// syscall
-						_print_instruction("syscall");
-						_print_instruction("lw", "$a0", "($sp)");			// load a0
+						_print_instruction(MipsOperator::sw, "$a0", "($sp)");			// store a0
+						_print_instruction(MipsOperator::la, "$a0", ins.argument_1);	// load a0
+						_print_instruction(MipsOperator::add, "$v0", "$zero", "4");		// syscall
+						_print_instruction(MipsOperator::syscall);
+						_print_instruction(MipsOperator::lw, "$a0", "($sp)");			// load a0
 					}
 					else
 					{
-						_print_instruction("la", "$a0", ins.argument_1);	// load a0
-						_print_instruction("add", "$v0", "$zero", "4");		// syscall
-						_print_instruction("syscall");
+						_print_instruction(MipsOperator::la, "$a0", ins.argument_1);	// load a0
+						_print_instruction(MipsOperator::add, "$v0", "$zero", "4");		// syscall
+						_print_instruction(MipsOperator::syscall);
 					}
 				}
 				// variable
@@ -303,31 +303,31 @@ namespace Yradex
 					auto a2 = _get_argument_2(ins);
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
 					{
-						_print_instruction("sw", "$a0", "($sp)");			// store a0
-						_print_instruction("add", "$a0", "$zero", a2);	// load a0
+						_print_instruction(MipsOperator::sw, "$a0", "($sp)");			// store a0
+						_print_instruction(MipsOperator::add, "$a0", "$zero", a2);	// load a0
 						if (ins.argument_2->get_type() == Symbol::int_symbol)
 						{
-							_print_instruction("add", "$v0", "$zero", "1");		// syscall
+							_print_instruction(MipsOperator::add, "$v0", "$zero", "1");		// syscall
 						}
 						else
 						{
-							_print_instruction("add", "$v0", "$zero", "11");		// syscall
+							_print_instruction(MipsOperator::add, "$v0", "$zero", "11");		// syscall
 						}
-						_print_instruction("syscall");
-						_print_instruction("lw", "$a0", "($sp)");			// load a0
+						_print_instruction(MipsOperator::syscall);
+						_print_instruction(MipsOperator::lw, "$a0", "($sp)");			// load a0
 					}
 					else
 					{
-						_print_instruction("add", "$a0", "$zero", a2);	// load a0
+						_print_instruction(MipsOperator::add, "$a0", "$zero", a2);	// load a0
 						if (ins.argument_2->get_type() == Symbol::int_symbol)
 						{
-							_print_instruction("add", "$v0", "$zero", "1");		// syscall
+							_print_instruction(MipsOperator::add, "$v0", "$zero", "1");		// syscall
 						}
 						else
 						{
-							_print_instruction("add", "$v0", "$zero", "11");		// syscall
+							_print_instruction(MipsOperator::add, "$v0", "$zero", "11");		// syscall
 						}
-						_print_instruction("syscall");
+						_print_instruction(MipsOperator::syscall);
 					}
 				}
 				break;
@@ -337,20 +337,20 @@ namespace Yradex
 				_try_save_argument_register();
 
 				// save fp
-				_print_instruction("sw", "$fp", "-4($sp)");
-				_print_instruction("add", "$fp", "$sp", "$zero");
+				_print_instruction(MipsOperator::sw, "$fp", "-4($sp)");
+				_print_instruction(MipsOperator::add, "$fp", "$sp", "$zero");
 
 				// save ra
-				_print_instruction("sw", "$ra", "-8($sp)");
+				_print_instruction(MipsOperator::sw, "$ra", "-8($sp)");
 
 				// CALL
-				_print_instruction("jal", ins.argument_1);
+				_print_instruction(MipsOperator::jal, ins.argument_1);
 
 				// recover fp
-				_print_instruction("lw", "$fp", "-4($sp)");
+				_print_instruction(MipsOperator::lw, "$fp", "-4($sp)");
 
 				// recover ra
-				_print_instruction("lw", "$ra", "-8($sp)");
+				_print_instruction(MipsOperator::lw, "$ra", "-8($sp)");
 
 				// return value
 				if (ins.result != Variable::null)
@@ -358,11 +358,11 @@ namespace Yradex
 					auto res = ins.result;
 					if (res->in_register())
 					{
-						_print_instruction("add", res->address_as_string(), "$zero", "$v0");
+						_print_instruction(MipsOperator::add, res->address_as_string(), "$zero", "$v0");
 					}
 					else
 					{
-						_print_instruction("sw", "$v0", res->address_as_string());
+						_print_instruction(MipsOperator::sw, "$v0", res->address_as_string());
 					}
 				}
 
@@ -374,12 +374,9 @@ namespace Yradex
 					{
 						std::ostringstream s;
 						s << i * 4 << "($sp)";
-						_print_instruction("lw", VariableAddress(true, i + 4), s.str());
+						_print_instruction(MipsOperator::lw, VariableAddress(true, i + 4), s.str());
 					}
-					if (this_arg_count != 1)
-					{
-						_print_instruction("add", "$sp", "$sp", 4 * this_arg_count);
-					}
+					_print_instruction(MipsOperator::add, "$sp", "$sp", 4 * (this_arg_count - 1));
 				}
 
 				_arg_count = 0;
@@ -388,7 +385,7 @@ namespace Yradex
 			case PseudoOperator::ret:
 			{
 				auto va = _get_argument_1(ins);
-				_print_instruction("add", "$v0", "$zero", va);
+				_print_instruction(MipsOperator::add, "$v0", "$zero", va);
 
 				// recover registers
 				int relative_sp = 4;
@@ -398,14 +395,14 @@ namespace Yradex
 					std::ostringstream s;
 					s << relative_sp << "($sp)";
 					relative_sp += 4;
-					_print_instruction("lw", VariableAddress(true, i), s.str());
+					_print_instruction(MipsOperator::lw, VariableAddress(true, i), s.str());
 				}
 
 				// move sp
-				_print_instruction("add", "$sp", "$fp", "$zero");
+				_print_instruction(MipsOperator::add, "$sp", "$fp", "$zero");
 
 				// return
-				_print_instruction("jr", "$ra");
+				_print_instruction(MipsOperator::jr, "$ra");
 				break;
 			}
 			case PseudoOperator::label:
@@ -420,13 +417,13 @@ namespace Yradex
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("add", res->address_as_string(), "$zero", a1);
+					_print_instruction(MipsOperator::add, res->address_as_string(), "$zero", a1);
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("add", res_new, "$zero", a1);
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::add, res_new, "$zero", a1);
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
@@ -437,31 +434,31 @@ namespace Yradex
 				if (ins.argument_2->is_const())
 				{
 					addr += ins.argument_2->get_value() * 4;
-					_print_instruction("add", "$v0", "$zero", addr);
+					_print_instruction(MipsOperator::add, "$v0", "$zero", addr);
 				}
 				else
 				{
 					string_type a2 = _get_argument_2(ins);
-					_print_instruction("mul", "$v0", a2, 4);
-					_print_instruction("add", "$v0", "$v0", addr);
+					_print_instruction(MipsOperator::mul, "$v0", a2, 4);
+					_print_instruction(MipsOperator::add, "$v0", "$v0", addr);
 				}
 
 				if (ins.argument_1->get_function() != FunctionIdentifier::global)
 				{
-					_print_instruction("add", "$v0", "$v0", "$fp");
+					_print_instruction(MipsOperator::add, "$v0", "$v0", "$fp");
 				}
 
 				// res
 				auto res = ins.result;
 				if (res->in_register())
 				{
-					_print_instruction("lw", res->address_as_string(), "($v0)");
+					_print_instruction(MipsOperator::lw, res->address_as_string(), "($v0)");
 				}
 				else
 				{
 					VariableAddress res_new = VariableAddress(true, 2);
-					_print_instruction("lw", res_new, "($v0)");
-					_print_instruction("sw", res_new, res->address_as_string());
+					_print_instruction(MipsOperator::lw, res_new, "($v0)");
+					_print_instruction(MipsOperator::sw, res_new, res->address_as_string());
 				}
 				break;
 			}
@@ -474,27 +471,27 @@ namespace Yradex
 
 				if (ins.argument_1->is_const())
 				{
-					_print_instruction("add", "$v0", "$zero", ins.result->position() + ins.argument_1->get_value() * 4);
+					_print_instruction(MipsOperator::add, "$v0", "$zero", ins.result->position() + ins.argument_1->get_value() * 4);
 				}
 				else
 				{
-					_print_instruction("mul", "$v0", index, 4);
-					_print_instruction("add", "$v0", "$v0", ins.result->position());
+					_print_instruction(MipsOperator::mul, "$v0", index, 4);
+					_print_instruction(MipsOperator::add, "$v0", "$v0", ins.result->position());
 				}
 
 				if (!(ins.result->get_function() == FunctionIdentifier::global))
 				{
-					_print_instruction("add", "$v0", "$v0", "$fp");
+					_print_instruction(MipsOperator::add, "$v0", "$v0", "$fp");
 				}				
 
 				if (ins.argument_2->is_const())
 				{
-					_print_instruction("add", VariableAddress(true, 3), "$zero", value);
-					_print_instruction("sw", VariableAddress(true, 3), "($v0)");
+					_print_instruction(MipsOperator::add, VariableAddress(true, 3), "$zero", value);
+					_print_instruction(MipsOperator::sw, VariableAddress(true, 3), "($v0)");
 				}
 				else
 				{
-					_print_instruction("sw", value, "($v0)");
+					_print_instruction(MipsOperator::sw, value, "($v0)");
 				}
 
 				break;
@@ -505,14 +502,14 @@ namespace Yradex
 				if (_arg_count < 4)
 				{
 					string_type value = _get_argument_1(ins);
-					_print_instruction("add", VariableAddress(true, _arg_count + 4), "$zero", value);
+					_print_instruction(MipsOperator::add, VariableAddress(true, _arg_count + 4), "$zero", value);
 				}
 				else
 				{
 					string_type value = _get_argument_1(ins);
 					std::ostringstream stream;
 					stream << static_cast<int>(_arg_count - 4) * -4 - 12 << "($sp)";
-					_print_instruction("sw", value, stream.str());
+					_print_instruction(MipsOperator::sw, value, stream.str());
 				}
 				++_arg_count;
 				break;
@@ -540,15 +537,12 @@ namespace Yradex
 				auto this_arg_count = _table.get_current_function_detail()->get_parameter_list().size();
 				if (this_arg_count)
 				{
-					if (this_arg_count != 1)
-					{
-						_print_instruction("sub", "$sp", "$sp", 4 * this_arg_count);
-					}
+					_print_instruction(MipsOperator::sub, "$sp", "$sp", 4 * (this_arg_count - 1));
 					for (size_t i = 0; i < this_arg_count; ++i)
 					{
 						std::ostringstream s;
 						s << i * 4 << "($sp)";
-						_print_instruction("sw", VariableAddress(true, i + 4), s.str());
+						_print_instruction(MipsOperator::sw, VariableAddress(true, i + 4), s.str());
 					}
 				}
 			}
@@ -566,7 +560,7 @@ namespace Yradex
 				auto ta = ins.argument_1;
 				if (!ta->in_register())
 				{
-					_print_instruction("lw", "$v0", ta->address_as_string());
+					_print_instruction(MipsOperator::lw, "$v0", ta->address_as_string());
 					return "$v0";
 				}
 				return ta->address_as_string();
@@ -585,7 +579,7 @@ namespace Yradex
 				auto ta = ins.argument_2;
 				if (!ta->in_register())
 				{
-					_print_instruction("lw", "$v1", ta->address_as_string());
+					_print_instruction(MipsOperator::lw, "$v1", ta->address_as_string());
 					return "$v1";
 				}
 				return ta->address_as_string();
