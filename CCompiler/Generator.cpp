@@ -264,7 +264,15 @@ namespace Yradex
 			}
 			case PseudoOperator::read:
 			{
-				_print_instruction(MipsOperator::add, "$v0", "$zero", "5");
+				if (ins.result->get_type() == Symbol::int_symbol)
+				{
+					_print_instruction(MipsOperator::add, "$v0", "$zero", "5");
+				}
+				else
+				{
+					_print_instruction(MipsOperator::add, "$v0", "$zero", "12");
+				}
+
 				_print_instruction(MipsOperator::syscall);
 				// res
 				auto res = ins.result;
@@ -497,22 +505,35 @@ namespace Yradex
 				break;
 			}
 			case PseudoOperator::arg:
+			{
 				_try_save_argument_register();
+				string_type value = _get_argument_1(ins);
+
+				if (ins.argument_1->in_register())
+				{
+					int pos = ins.argument_1->position();
+					if (pos >= 4 && pos < 8)
+					{
+						value = "$v0";
+						std::ostringstream s;
+						s << pos * 4 - 16 << "($sp)";
+						_print_instruction(MipsOperator::lw, value, s.str());
+					}
+				}
 
 				if (_arg_count < 4)
 				{
-					string_type value = _get_argument_1(ins);
 					_print_instruction(MipsOperator::add, VariableAddress(true, _arg_count + 4), "$zero", value);
 				}
 				else
 				{
-					string_type value = _get_argument_1(ins);
 					std::ostringstream stream;
 					stream << static_cast<int>(_arg_count - 4) * -4 - 12 << "($sp)";
 					_print_instruction(MipsOperator::sw, value, stream.str());
 				}
 				++_arg_count;
 				break;
+			}
 			case PseudoOperator::nop:
 				break;
 			default:
