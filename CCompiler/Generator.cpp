@@ -81,7 +81,7 @@ namespace Yradex
 			{
 				relative_sp -= 4;
 				std::ostringstream s;
-				s << relative_sp << "($sp)";
+				s << relative_sp << "($fp)";
 				_print_instruction(MipsOperator::sw, VariableAddress(true, i), s.str());
 			}
 			_lower_address_of_saved_s_register_to_fp = relative_sp;

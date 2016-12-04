@@ -4,16 +4,21 @@
 #include "Optimizer.h"
 #include "Generator.h"
 
+#include <fstream>
+
 using namespace Yradex::CCompiler;
 
 int main(int argc, char **argv)
 {
-	if (argc != 2)
-	{
-		std::cerr << "usage: CCompiler.exe filepath" << std::endl;
-		return 0;
-	}
-	std::string filename = argv[1];
+	//if (argc != 2)
+	//{
+	//	std::cerr << "usage: CCompiler.exe filepath" << std::endl;
+	//	return 0;
+	//}
+
+	std::cout << "enter file path: " << std::endl;
+	std::string filename;
+	std::cin >> filename;
 
 	SymbolTable symbol_table;
 	PseudoTable pseudo_table(symbol_table);
@@ -31,8 +36,12 @@ int main(int argc, char **argv)
 	Optimizer optimizer(pseudo_table);
 	optimizer.optimize();
 
-	Generator generator(pseudo_table, std::cout);
+	std::ofstream stream("asm.txt");
+
+	Generator generator(pseudo_table, stream);
 	generator.generate();
+
+	std::cout << "output to asm.txt" << std::endl;
 
 	system("pause");
 }

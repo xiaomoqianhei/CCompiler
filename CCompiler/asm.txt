@@ -1,0 +1,808 @@
+		.data
+array:		.space		12
+$Str8:		.asciiz		"Error in function_call_test: add_one_until(test_var, seed) != "
+$Str0:		.asciiz		"IO test: please input num 0    "
+$Str1:		.asciiz		"Error in io_test: test_var != 0    "
+$Str2:		.asciiz		"IO test: please input string (EXACTLY these chars, otherwise may cause exception, <enter> stands for enter key): 1<enter>99999999<enter>gN-20<enter>    "
+$Str3:		.asciiz		"Error in io_test: test_var != 1    "
+$Str4:		.asciiz		"Error in io_test: t2 != 99999999    "
+$Str5:		.asciiz		"Error in io_test: t3 != g    "
+$Str6:		.asciiz		"Error in io_test: t4 != N    "
+$Str7:		.asciiz		"Error in io_test: t5 != -20    "
+$Str9:		.asciiz		"    "
+$Str10:		.asciiz		"Error in function_call_test: test_var != 0    "
+$Str29:		.asciiz		"Error in assign_and_expression_test: wrong result 5    "
+$Str11:		.asciiz		"Error in condition_test: 20 - 20 is true    "
+$Str28:		.asciiz		"Error in assign_and_expression_test: wrong result 4    "
+$Str12:		.asciiz		"Error in condition_test: 15 - 17 is false    "
+$Str13:		.asciiz		"Error in condition_test: 10 + 20 + 30 + 40 == 100 is false    "
+$Str14:		.asciiz		"Error in condition_test: 10 + 20 + 30 + 40 != 100 is true    "
+$Str15:		.asciiz		"Error in condition_test: 240 > 120 is false    "
+$Str16:		.asciiz		"Error in condition_test: 120 < 240 is false    "
+$Str17:		.asciiz		"Error in condition_test: 120 <= 240 is false    "
+$Str18:		.asciiz		"Error in condition_test: 240 < 240 is false    "
+$Str21:		.asciiz		"Error in condition_test    "
+$Str19:		.asciiz		"Error in condition_test: 240 >= 120 is false    "
+$Str20:		.asciiz		"Error in condition_test: 120 >= 120 is false    "
+$Str22:		.asciiz		"Error in do_while_loop_test: wrong result    "
+$Str23:		.asciiz		"Error in for_loop_test: wrong result 1    "
+$Str24:		.asciiz		"Error in for_loop_test: wrong result 2    "
+$Str25:		.asciiz		"Error in assign_and_expression_test: wrong result 1    "
+$Str26:		.asciiz		"Error in assign_and_expression_test: wrong result 2    "
+$Str27:		.asciiz		"Error in assign_and_expression_test: wrong result 3    "
+$Str30:		.asciiz		"Error in try_fibonacci: wrong result    "
+$Str31:		.asciiz		"Please input a seed for further tests (between 10 and 1000):    "
+$Str32:		.asciiz		"All tests ended successfully. "
+$Str33:		.asciiz		" of "
+$Str34:		.asciiz		" cases passed.    "
+		.text
+		add		$fp,		$sp,		$zero
+		la		$ra,		finish
+
+
+main:
+		sw		$s0,		-12($fp)
+		sw		$s1,		-16($fp)
+		sw		$s2,		-20($fp)
+		add		$sp,		$sp,		-24
+		add		$s2,		$zero,		0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		io_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		la		$a0,		$Str31
+		add		$v0,		$zero,		4
+		syscall
+		add		$v0,		$zero,		5
+		syscall
+		add		$s1,		$zero,		$v0
+		add		$a0,		$zero,		$s1
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		function_call_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		condition_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		add		$a0,		$zero,		$s1
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		do_while_loop_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		add		$a0,		$zero,		$s1
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		for_loop_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		assign_and_expression_test
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		try_fibonacci
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		add		$s0,		$s2,		$s0
+		add		$s2,		$zero,		$s0
+		la		$a0,		$Str32
+		add		$v0,		$zero,		4
+		syscall
+		add		$a0,		$zero,		$s2
+		add		$v0,		$zero,		1
+		syscall
+		la		$a0,		$Str33
+		add		$v0,		$zero,		4
+		syscall
+		add		$a0,		$zero,		27
+		add		$v0,		$zero,		1
+		syscall
+		la		$a0,		$Str34
+		add		$v0,		$zero,		4
+		syscall
+		add		$v0,		$zero,		0
+		lw		$s2,		-20($fp)
+		lw		$s1,		-16($fp)
+		lw		$s0,		-12($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+assign_and_expression_test:
+		sw		$s0,		-12($fp)
+		sw		$s1,		-16($fp)
+		sw		$s2,		-20($fp)
+		sw		$s3,		-24($fp)
+		sw		$s4,		-28($fp)
+		sw		$s5,		-32($fp)
+		sw		$s6,		-36($fp)
+		sw		$s7,		-40($fp)
+		add		$sp,		$sp,		-148
+		add		$v0,		$zero,		5
+		sw		$v0,		-144($fp)
+		add		$t4,		$zero,		1
+		add		$t5,		$zero,		2
+		add		$t0,		$t4,		$t5
+		add		$t6,		$zero,		$t0
+		add		$t0,		$t5,		$t6
+		add		$t7,		$zero,		$t0
+		add		$t0,		$t6,		$t7
+		add		$s0,		$zero,		$t0
+		add		$t0,		$t7,		$s0
+		add		$s1,		$zero,		$t0
+		add		$t0,		$s0,		$s1
+		add		$s2,		$zero,		$t0
+		add		$t0,		$s1,		$s2
+		add		$t2,		$zero,		$t0
+		add		$t0,		$s2,		$t2
+		add		$s3,		$zero,		$t0
+		add		$t0,		$t2,		$s3
+		add		$s4,		$zero,		$t0
+		add		$t0,		$s3,		$s4
+		add		$s5,		$zero,		$t0
+		add		$t0,		$s4,		$s5
+		add		$s6,		$zero,		$t0
+		add		$t0,		$s5,		$s6
+		add		$s7,		$zero,		$t0
+		add		$t0,		$s6,		$s7
+		add		$t8,		$zero,		$t0
+		add		$t0,		$s7,		$t8
+		add		$t9,		$zero,		$t0
+		add		$t0,		$t8,		$t9
+		add		$k0,		$zero,		$t0
+		add		$t0,		$t9,		$k0
+		add		$k1,		$zero,		$t0
+		add		$t0,		$k0,		$k1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-44($fp)
+		lw		$v1,		-44($fp)
+		add		$t0,		$k1,		$v1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-48($fp)
+		lw		$v0,		-44($fp)
+		lw		$v1,		-48($fp)
+		add		$t0,		$v0,		$v1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-52($fp)
+		beq		$s5,		144,		$Lbl38
+		la		$a0,		$Str25
+		add		$v0,		$zero,		4
+		syscall
+		lw		$v0,		-144($fp)
+		sub		$t0,		$v0,		1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-144($fp)
+$Lbl38:
+		lw		$v0,		-52($fp)
+		beq		$v0,		10946,		$Lbl39
+		la		$a0,		$Str26
+		add		$v0,		$zero,		4
+		syscall
+		lw		$v0,		-144($fp)
+		sub		$t0,		$v0,		1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-144($fp)
+$Lbl39:
+		add		$v0,		$zero,		-56
+		add		$v0,		$v0,		$fp
+		add		$v1,		$zero,		10946
+		sw		$v1,		($v0)
+		add		$v0,		$zero,		-60
+		add		$v0,		$v0,		$fp
+		add		$v1,		$zero,		6765
+		sw		$v1,		($v0)
+		add		$v0,		$zero,		18
+		sw		$v0,		-140($fp)
+$Lbl40:
+		lw		$v0,		-140($fp)
+		sub		$t0,		$v0,		0
+		bltz		$t0,		$Lbl41
+		lw		$v0,		-140($fp)
+		add		$t0,		$v0,		2
+		mul		$v0,		$t0,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t0,		($v0)
+		lw		$v0,		-140($fp)
+		add		$t1,		$v0,		1
+		mul		$v0,		$t1,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		sub		$t0,		$t0,		$t1
+		lw		$v0,		-140($fp)
+		mul		$v0,		$v0,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		sw		$t0,		($v0)
+		lw		$v0,		-140($fp)
+		add		$v0,		$v0,		-1
+		sw		$v0,		-140($fp)
+		b		$Lbl40
+$Lbl41:
+		add		$v0,		$zero,		-92
+		add		$v0,		$v0,		$fp
+		lw		$t0,		($v0)
+		beq		$t0,		144,		$Lbl42
+		la		$a0,		$Str27
+		add		$v0,		$zero,		4
+		syscall
+		lw		$v0,		-144($fp)
+		sub		$t0,		$v0,		1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-144($fp)
+$Lbl42:
+		add		$v0,		$zero,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t0,		($v0)
+		beq		$t0,		1,		$Lbl43
+		la		$a0,		$Str28
+		add		$v0,		$zero,		4
+		syscall
+		lw		$v0,		-144($fp)
+		sub		$t0,		$v0,		1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-144($fp)
+$Lbl43:
+		add		$t0,		$zero,		-95
+		add		$t1,		$zero,		-8
+		mul		$t1,		$t1,		2
+		mul		$t1,		$t1,		-6
+		add		$t0,		$t0,		$t1
+		add		$v0,		$zero,		-132
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		add		$t0,		$t0,		$t1
+		add		$v0,		$zero,		-128
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		add		$t0,		$t0,		$t1
+		add		$v0,		$zero,		144
+		div		$t0,		$v0,		$t0
+		add		$t0,		$t0,		108
+		sub		$t0,		$t0,		87
+		add		$v0,		$zero,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		mul		$v0,		$t1,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		mul		$t1,		$t1,		2
+		mul		$v0,		$t1,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		mul		$v0,		$t1,		4
+		add		$v0,		$v0,		-136
+		add		$v0,		$v0,		$fp
+		lw		$t1,		($v0)
+		add		$v0,		$zero,		0
+		sub		$t1,		$v0,		$t1
+		mul		$t1,		$t1,		3
+		add		$t0,		$t0,		$t1
+		add		$t3,		$zero,		$t0
+		beq		$t3,		51,		$Lbl44
+		la		$a0,		$Str29
+		add		$v0,		$zero,		4
+		syscall
+		lw		$v0,		-144($fp)
+		sub		$t0,		$v0,		1
+		add		$v0,		$zero,		$t0
+		sw		$v0,		-144($fp)
+$Lbl44:
+		lw		$v0,		-144($fp)
+		add		$v0,		$zero,		$v0
+		lw		$s7,		-40($fp)
+		lw		$s6,		-36($fp)
+		lw		$s5,		-32($fp)
+		lw		$s4,		-28($fp)
+		lw		$s3,		-24($fp)
+		lw		$s2,		-20($fp)
+		lw		$s1,		-16($fp)
+		lw		$s0,		-12($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+io_test:
+		add		$sp,		$sp,		-12
+		add		$t6,		$zero,		6
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+		add		$v0,		$zero,		5
+		syscall
+		add		$t3,		$zero,		$v0
+		beq		$t3,		0,		$Lbl0
+		la		$a0,		$Str1
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl0:
+		la		$a0,		$Str2
+		add		$v0,		$zero,		4
+		syscall
+		add		$v0,		$zero,		5
+		syscall
+		add		$t3,		$zero,		$v0
+		add		$v0,		$zero,		5
+		syscall
+		add		$t2,		$zero,		$v0
+		add		$v0,		$zero,		12
+		syscall
+		add		$t1,		$zero,		$v0
+		add		$v0,		$zero,		12
+		syscall
+		add		$t4,		$zero,		$v0
+		add		$v0,		$zero,		5
+		syscall
+		add		$t5,		$zero,		$v0
+		beq		$t3,		1,		$Lbl1
+		la		$a0,		$Str3
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl1:
+		beq		$t2,		99999999,		$Lbl2
+		la		$a0,		$Str4
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl2:
+		beq		$t1,		103,		$Lbl3
+		la		$a0,		$Str5
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl3:
+		beq		$t4,		78,		$Lbl4
+		la		$a0,		$Str6
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl4:
+		add		$t0,		$zero,		-20
+		beq		$t5,		$t0,		$Lbl5
+		la		$a0,		$Str7
+		add		$v0,		$zero,		4
+		syscall
+		sub		$t0,		$t6,		1
+		add		$t6,		$zero,		$t0
+$Lbl5:
+		add		$v0,		$zero,		$t6
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+add_one_until:
+		sw		$s0,		-20($fp)
+		add		$sp,		$sp,		-24
+		sub		$s0,		$a1,		$a0
+		blez		$s0,		$Lbl6
+		add		$s0,		$a0,		1
+		add		$a0,		$zero,		$s0
+		sub		$sp,		$sp,		4
+		sw		$a0,		0($sp)
+		sw		$a1,		4($sp)
+		lw		$v0,		0($sp)
+		add		$a0,		$zero,		$v0
+		lw		$v0,		4($sp)
+		add		$a1,		$zero,		$v0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		add_one_until
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		lw		$a0,		0($sp)
+		lw		$a1,		4($sp)
+		add		$sp,		$sp,		4
+		add		$v0,		$zero,		$s0
+		lw		$s0,		-20($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+$Lbl6:
+		add		$v0,		$zero,		$a0
+		lw		$s0,		-20($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+condition_test:
+		add		$sp,		$sp,		-12
+		add		$t1,		$zero,		0
+		add		$t0,		$zero,		0
+		beq		$t0,		0,		$Lbl9
+		la		$a0,		$Str11
+		add		$v0,		$zero,		4
+		syscall
+		b		$Lbl10
+$Lbl9:
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+$Lbl10:
+		add		$t0,		$zero,		-2
+		beq		$t0,		0,		$Lbl11
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl12
+$Lbl11:
+		la		$a0,		$Str12
+		add		$v0,		$zero,		4
+		syscall
+$Lbl12:
+		add		$t0,		$zero,		30
+		add		$t0,		$t0,		30
+		add		$t0,		$t0,		40
+		bne		$t0,		100,		$Lbl13
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl14
+$Lbl13:
+		la		$a0,		$Str13
+		add		$v0,		$zero,		4
+		syscall
+$Lbl14:
+		add		$t0,		$zero,		30
+		add		$t0,		$t0,		30
+		add		$t0,		$t0,		40
+		beq		$t0,		100,		$Lbl15
+		la		$a0,		$Str14
+		add		$v0,		$zero,		4
+		syscall
+		b		$Lbl16
+$Lbl15:
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+$Lbl16:
+		add		$t0,		$zero,		120
+		blez		$t0,		$Lbl17
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl18
+$Lbl17:
+		la		$a0,		$Str15
+		add		$v0,		$zero,		4
+		syscall
+$Lbl18:
+		add		$t0,		$zero,		120
+		blez		$t0,		$Lbl19
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl20
+$Lbl19:
+		la		$a0,		$Str16
+		add		$v0,		$zero,		4
+		syscall
+$Lbl20:
+		add		$t0,		$zero,		120
+		bltz		$t0,		$Lbl21
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl22
+$Lbl21:
+		la		$a0,		$Str17
+		add		$v0,		$zero,		4
+		syscall
+$Lbl22:
+		add		$t0,		$zero,		0
+		bltz		$t0,		$Lbl23
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl24
+$Lbl23:
+		la		$a0,		$Str18
+		add		$v0,		$zero,		4
+		syscall
+$Lbl24:
+		add		$t0,		$zero,		120
+		bltz		$t0,		$Lbl25
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl26
+$Lbl25:
+		la		$a0,		$Str19
+		add		$v0,		$zero,		4
+		syscall
+$Lbl26:
+		add		$t0,		$zero,		0
+		bltz		$t0,		$Lbl27
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		b		$Lbl28
+$Lbl27:
+		la		$a0,		$Str20
+		add		$v0,		$zero,		4
+		syscall
+$Lbl28:
+		beq		$t1,		10,		$Lbl29
+		la		$a0,		$Str21
+		add		$v0,		$zero,		4
+		syscall
+$Lbl29:
+		add		$v0,		$zero,		$t1
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+function_call_test:
+		sw		$s0,		-16($fp)
+		sw		$s1,		-20($fp)
+		sw		$s2,		-24($fp)
+		add		$sp,		$sp,		-28
+		add		$s2,		$zero,		2
+		add		$s1,		$zero,		0
+		sub		$sp,		$sp,		0
+		sw		$a0,		0($sp)
+		add		$a0,		$zero,		$s1
+		lw		$v0,		0($sp)
+		add		$a1,		$zero,		$v0
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		add_one_until
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+		lw		$a0,		0($sp)
+		add		$sp,		$sp,		0
+		beq		$s0,		$a0,		$Lbl7
+		sw		$a0,		($sp)
+		la		$a0,		$Str8
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sw		$a0,		($sp)
+		add		$a0,		$zero,		$a0
+		add		$v0,		$zero,		1
+		syscall
+		lw		$a0,		($sp)
+		sw		$a0,		($sp)
+		la		$a0,		$Str9
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sub		$s0,		$s2,		1
+		add		$s2,		$zero,		$s0
+$Lbl7:
+		beq		$s1,		0,		$Lbl8
+		sw		$a0,		($sp)
+		la		$a0,		$Str10
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sub		$s0,		$s2,		1
+		add		$s2,		$zero,		$s0
+$Lbl8:
+		add		$v0,		$zero,		$s2
+		lw		$s2,		-24($fp)
+		lw		$s1,		-20($fp)
+		lw		$s0,		-16($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+do_while_loop_test:
+		add		$sp,		$sp,		-16
+		add		$t3,		$zero,		1
+		add		$t1,		$zero,		0
+		add		$t2,		$zero,		0
+$Lbl30:
+		add		$t0,		$t1,		1
+		add		$t1,		$zero,		$t0
+		add		$t0,		$t2,		$t1
+		add		$t2,		$zero,		$t0
+		sub		$t0,		$a0,		$t1
+		bgtz		$t0,		$Lbl30
+		add		$t0,		$a0,		1
+		mul		$t0,		$t0,		$a0
+		div		$t0,		$t0,		2
+		beq		$t2,		$t0,		$Lbl31
+		sw		$a0,		($sp)
+		la		$a0,		$Str22
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sub		$t0,		$t3,		1
+		add		$t3,		$zero,		$t0
+$Lbl31:
+		add		$v0,		$zero,		$t3
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+for_loop_test:
+		add		$sp,		$sp,		-16
+		add		$t3,		$zero,		2
+		add		$t2,		$zero,		0
+		add		$t1,		$zero,		0
+$Lbl32:
+		add		$t0,		$a0,		1
+		sub		$t0,		$t0,		$t1
+		blez		$t0,		$Lbl33
+		add		$t0,		$t2,		$t1
+		add		$t2,		$zero,		$t0
+		add		$t1,		$t1,		1
+		b		$Lbl32
+$Lbl33:
+		add		$t0,		$a0,		1
+		mul		$t0,		$t0,		$a0
+		div		$t0,		$t0,		2
+		beq		$t2,		$t0,		$Lbl34
+		sw		$a0,		($sp)
+		la		$a0,		$Str23
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sub		$t0,		$t3,		1
+		add		$t3,		$zero,		$t0
+$Lbl34:
+		add		$t2,		$zero,		0
+		add		$t1,		$zero,		$a0
+$Lbl35:
+		beq		$t1,		0,		$Lbl36
+		add		$t0,		$t2,		$t1
+		add		$t2,		$zero,		$t0
+		add		$t1,		$t1,		-1
+		b		$Lbl35
+$Lbl36:
+		add		$t0,		$a0,		1
+		mul		$t0,		$t0,		$a0
+		div		$t0,		$t0,		2
+		beq		$t2,		$t0,		$Lbl37
+		sw		$a0,		($sp)
+		la		$a0,		$Str24
+		add		$v0,		$zero,		4
+		syscall
+		lw		$a0,		($sp)
+		sub		$t0,		$t3,		1
+		add		$t3,		$zero,		$t0
+$Lbl37:
+		add		$v0,		$zero,		$t3
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+init_array:
+		add		$sp,		$sp,		-12
+		add		$v0,		$zero,		268500992
+		add		$v1,		$zero,		-1
+		sw		$v1,		($v0)
+		add		$v0,		$zero,		268500996
+		add		$v1,		$zero,		0
+		sw		$v1,		($v0)
+		add		$v0,		$zero,		268501000
+		add		$v1,		$zero,		1
+		sw		$v1,		($v0)
+		add		$v0,		$zero,		0
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+swap_items_in_array:
+		add		$sp,		$sp,		-12
+		add		$t1,		$zero,		0
+$Lbl45:
+		add		$v0,		$zero,		2
+		sub		$t0,		$v0,		$t1
+		blez		$t0,		$Lbl46
+		add		$t0,		$t1,		1
+		mul		$v0,		$t0,		4
+		add		$v0,		$v0,		268500992
+		lw		$t0,		($v0)
+		mul		$v0,		$t1,		4
+		add		$v0,		$v0,		268500992
+		sw		$t0,		($v0)
+		add		$t1,		$t1,		1
+		b		$Lbl45
+$Lbl46:
+		add		$v0,		$zero,		0
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+calculate_fibonacci:
+		sw		$s0,		-16($fp)
+		sw		$s1,		-20($fp)
+		add		$sp,		$sp,		-24
+$Lbl47:
+		sub		$sp,		$sp,		0
+		sw		$a0,		0($sp)
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		swap_items_in_array
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		lw		$a0,		0($sp)
+		add		$sp,		$sp,		0
+		add		$v0,		$zero,		268500992
+		lw		$s0,		($v0)
+		add		$v0,		$zero,		268500996
+		lw		$s1,		($v0)
+		add		$s0,		$s0,		$s1
+		add		$v0,		$zero,		268501000
+		sw		$s0,		($v0)
+		add		$v0,		$zero,		268501000
+		lw		$s0,		($v0)
+		sub		$s0,		$a0,		$s0
+		bgez		$s0,		$Lbl47
+		add		$v0,		$zero,		0
+		lw		$s1,		-20($fp)
+		lw		$s0,		-16($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+
+
+try_fibonacci:
+		sw		$s0,		-12($fp)
+		add		$sp,		$sp,		-16
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		init_array
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$a0,		$zero,		9999999
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		calculate_fibonacci
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$v0,		$zero,		268501000
+		lw		$s0,		($v0)
+		beq		$s0,		14930352,		$Lbl48
+		la		$a0,		$Str30
+		add		$v0,		$zero,		4
+		syscall
+		add		$v0,		$zero,		0
+		lw		$s0,		-12($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+$Lbl48:
+		add		$v0,		$zero,		1
+		lw		$s0,		-12($fp)
+		add		$sp,		$fp,		$zero
+		jr		$ra
+finish:
