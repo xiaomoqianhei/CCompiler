@@ -235,7 +235,7 @@ namespace Yradex
 			}
 			else if (first_char == '=')
 			{
-				if (*iter == '=')
+				if (iter != _string_to_analysis.cend() && *iter == '=')
 				{
 					std::advance(iter, 1);
 					text = "==";
@@ -249,7 +249,7 @@ namespace Yradex
 			}
 			else if (first_char == '<')
 			{
-				if (*iter == '=')
+				if (iter != _string_to_analysis.cend() && *iter == '=')
 				{
 					std::advance(iter, 1);
 					text = "<=";
@@ -263,7 +263,7 @@ namespace Yradex
 			}
 			else if (first_char == '>')
 			{
-				if (*iter == '=')
+				if (iter != _string_to_analysis.cend() && *iter == '=')
 				{
 					std::advance(iter, 1);
 					text = ">=";
@@ -277,7 +277,7 @@ namespace Yradex
 			}
 			else if (first_char == '!')
 			{
-				if (*iter == '=')
+				if (iter != _string_to_analysis.cend() && *iter == '=')
 				{
 					std::advance(iter, 1);
 					text = "!=";
@@ -292,7 +292,7 @@ namespace Yradex
 			}
 			else if (first_char == '/')
 			{
-				if (*iter == '/')
+				if (iter != _string_to_analysis.cend() && *iter == '/')
 				{
 					_iter = _string_to_analysis.cend();
 					return _next();

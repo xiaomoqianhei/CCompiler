@@ -8,7 +8,7 @@ namespace Yradex
 		{
 			if (_lexical_analyzer.last() != s)
 			{
-				_error(Error::character_required, "'" + _lexical_analyzer.get_str_of(s) + "'");
+				_error(Error::missing_character, "'" + _lexical_analyzer.get_str_of(s) + "'");
 				_lexical_analyzer.skip_to_next_statement();
 				return false;
 			}
@@ -108,7 +108,7 @@ namespace Yradex
 					}
 					if (_lexical_analyzer.last() != Symbol::right_square_brace)
 					{
-						_error(Error::character_required, "']'");
+						_error(Error::missing_character, "']'");
 					}
 					else
 					{
@@ -133,7 +133,7 @@ namespace Yradex
 				}
 				else if (_lexical_analyzer.last() != Symbol::comma)
 				{
-					_error(Error::character_required, "';'");
+					_error(Error::missing_character, "';'");
 					_lexical_analyzer.skip_this_statement_or_until([is_start_of_next](Symbol s) {
 						return is_start_of_next(s) || s == Symbol::comma;
 					});
@@ -174,7 +174,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.last() != Symbol::left_curly_brace)
 			{
-				_error(Error::character_required, "'{'");
+				_error(Error::missing_character, "'{'");
 				_lexical_analyzer.skip_until(
 					[](Symbol s) {return SymbolUtilities::is_type_identifier(s) || s == Symbol::left_curly_brace; }
 				);
@@ -220,7 +220,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.next() != Symbol::left_parenthesis)
 			{
-				_error(Error::character_required, "'('");
+				_error(Error::missing_character, "'('");
 				_lexical_analyzer.skip_this_statement_or_until([](Symbol s) {
 					return SymbolUtilities::is_type_identifier(s);
 				});
@@ -231,7 +231,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.last() != Symbol::left_curly_brace)
 			{
-				_error(Error::character_required, "'{'");
+				_error(Error::missing_character, "'{'");
 				_lexical_analyzer.skip_until(
 					[](Symbol s) {return SymbolUtilities::is_type_identifier(s) || s == Symbol::left_curly_brace; }
 				);
@@ -302,7 +302,7 @@ namespace Yradex
 
 					if (_lexical_analyzer.next() != Symbol::assign)
 					{
-						_error(Error::character_required, "'='");
+						_error(Error::missing_character, "'='");
 					}
 					else
 					{
@@ -341,7 +341,7 @@ namespace Yradex
 
 				if (_lexical_analyzer.last() != Symbol::semicolon)
 				{
-					_error(Error::character_required, "';'");
+					_error(Error::missing_character, "';'");
 					_lexical_analyzer.skip_this_statement_or_until(
 						[is_start_of_next](Symbol s) {return is_start_of_next(s) || s == Symbol::const_symbol; }
 					);
@@ -401,7 +401,7 @@ namespace Yradex
 				}
 				if (is_start_of_next(_lexical_analyzer.last().first))
 				{
-					_error(Error::character_required, "')'");
+					_error(Error::missing_character, "')'");
 					return;
 				}
 
@@ -411,7 +411,7 @@ namespace Yradex
 				{
 					if (_lexical_analyzer.last() != Symbol::comma)
 					{
-						_error(Error::character_required, "','");
+						_error(Error::missing_character, "','");
 						goto error_skip;
 					}
 					_lexical_analyzer.next();
@@ -868,7 +868,7 @@ namespace Yradex
 				}
 				if (_lexical_analyzer.last() != Symbol::comma)
 				{
-					_error(Error::character_required, "')'");
+					_error(Error::missing_character, "')'");
 					_lexical_analyzer.skip_to_next_statement();
 					return;
 				}

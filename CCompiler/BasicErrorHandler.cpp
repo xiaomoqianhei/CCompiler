@@ -37,6 +37,7 @@ namespace Yradex
 			std::cerr << _level_map.at(level) << ": " << error << std::endl;
 			if (level == Level::fatal)
 			{
+				system("pause");
 				exit(0);
 			}
 		}
@@ -55,6 +56,7 @@ namespace Yradex
 				<< error << std::endl;
 			if (level == Level::fatal)
 			{
+				system("pause");
 				exit(0);
 			}
 		}
@@ -74,6 +76,7 @@ namespace Yradex
 				<< error << ": " << info << std::endl;
 			if (level == Level::fatal)
 			{
+				system("pause");
 				exit(0);
 			}
 		}

@@ -73,7 +73,6 @@ namespace Yradex
 			void debug(const string_type &info);
 
 		};
-
 	}
 }
 

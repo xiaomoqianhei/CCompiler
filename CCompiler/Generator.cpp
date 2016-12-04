@@ -474,7 +474,6 @@ namespace Yradex
 			case PseudoOperator::store:
 			{
 				// FIX
-
 				string_type index = _get_argument_1(ins);
 				string_type value = _get_argument_2(ins);
 
