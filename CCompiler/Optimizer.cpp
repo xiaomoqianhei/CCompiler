@@ -1,4 +1,5 @@
 #include "Optimizer.h"
+#include "Dag.h"
 
 namespace Yradex
 {
@@ -9,6 +10,10 @@ namespace Yradex
 			PseudoTable::PseudoTableFunctionSwitcher sw(_pseudo_table, f);
 
 			_calculate_constant_instruction();
+			//_common_subexpression_elimination(f);
+
+
+			_pseudo_table.shrink_variable_set();
 
 			Allocator allocator;
 			allocator.allocate(_pseudo_table);
@@ -16,7 +21,7 @@ namespace Yradex
 
 		void Optimizer::_calculate_constant_instruction()
 		{
-			auto list = _pseudo_table.get_instruction_list();
+			auto list = _pseudo_table.get_current_instruction_list();
 			for (auto & ins : list)
 			{
 				if (ins.argument_1->is_const() && ins.argument_2->is_const())
@@ -127,6 +132,12 @@ namespace Yradex
 				}
 			}
 			_pseudo_table.set_instruction_list(list);
+		}
+
+		void Optimizer::_common_subexpression_elimination(const FunctionIdentifier &f)
+		{
+			Dag dag(_pseudo_table);
+			dag.runDag(f);
 		}
 
 		void Optimizer::optimize()

@@ -66,7 +66,7 @@ namespace Yradex
 			void switch_function(const FunctionIdentifier &f);
 
 			Error insert_instruction(const PseudoInstruction &i);
-			
+
 			std::pair<std::shared_ptr<Variable>, bool> declear_variable(const string_type &name, Symbol type)
 			{
 				std::shared_ptr<Variable> v = Variable::new_variale(name, type, _current_function, false);
@@ -120,7 +120,7 @@ namespace Yradex
 			{
 				return _symbol_table.get_string(str);
 			}
-			const FunctionIdentifier& get_current_function_identifier() const
+			FunctionIdentifier get_current_function_identifier() const
 			{
 				return _current_function;
 			}
@@ -147,7 +147,7 @@ namespace Yradex
 				return _symbol_table.get_function_list();
 			}
 
-			std::list<PseudoInstruction> get_instruction_list() const
+			std::list<PseudoInstruction> get_current_instruction_list() const
 			{
 				return _instruction_map.at(_current_function);
 			}
@@ -160,9 +160,10 @@ namespace Yradex
 			{
 				return _symbol_table.get_variable_set(_current_function);
 			}
-			void set_variable_set(const std::unordered_set<std::shared_ptr<Variable>, VariableHasher> &set)
+
+			void shrink_variable_set()
 			{
-				_symbol_table.set_variable_set(_current_function, set);
+				_symbol_table.shrink_variable_set(_current_function);
 			}
 
 			const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>&

@@ -46,8 +46,8 @@ namespace Yradex
 
 			const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>& 
 				get_variable_set(const FunctionIdentifier &function);
-			void set_variable_set(const FunctionIdentifier &function,
-				const std::unordered_set<std::shared_ptr<Variable>, VariableHasher> &set);
+
+			void shrink_variable_set(const FunctionIdentifier &function);
 
 			const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>&
 				get_global_variable_set() const;

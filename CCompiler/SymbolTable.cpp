@@ -1,5 +1,7 @@
 #include "SymbolTable.h"
 
+#include <iterator>
+
 namespace Yradex
 {
 	namespace CCompiler
@@ -102,10 +104,14 @@ namespace Yradex
 		{
 			return _variable_map.at(function);
 		}
-		void SymbolTable::set_variable_set(const FunctionIdentifier & function, 
-			const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>& set)
+		void SymbolTable::shrink_variable_set(const FunctionIdentifier & function)
 		{
-			_variable_map.at(function) = set;
+			auto &set = _variable_map.at(function);
+			std::unordered_set<std::shared_ptr<Variable>, VariableHasher> new_set;
+			std::copy_if(set.begin(), set.end(), std::inserter(new_set, new_set.begin()),
+				[](const std::shared_ptr<Variable> &p) {return p->get_ref() != 0; }
+			);
+			set.swap(new_set);
 		}
 		const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>& SymbolTable::get_global_variable_set() const
 		{

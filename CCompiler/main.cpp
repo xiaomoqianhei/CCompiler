@@ -8,7 +8,7 @@
 
 using namespace Yradex::CCompiler;
 
-int main(int argc, char **argv)
+int main()
 {
 	//if (argc != 2)
 	//{

@@ -63,6 +63,9 @@
     <ClInclude Include="MipsOperator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Dag.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,6 +114,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MipsOperator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Dag.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

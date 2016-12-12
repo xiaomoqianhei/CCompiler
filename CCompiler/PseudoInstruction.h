@@ -47,6 +47,14 @@ namespace Yradex
 				const std::shared_ptr<Variable> &b, const std::shared_ptr<Variable> &res)
 				:operator_(op), argument_1(a), argument_2(b), result(res)
 			{
+				argument_1->increase_ref();
+				argument_2->increase_ref();
+			}
+
+			~PseudoInstruction()
+			{
+				argument_1->decrease_ref();
+				argument_2->decrease_ref();
 			}
 
 			void clear()

@@ -107,7 +107,7 @@ namespace Yradex
 			_print_instruction(MipsOperator::add, "$sp", "$sp", lowest_sp - 4);
 
 			// generate ins
-			auto list = _table.get_instruction_list();
+			auto list = _table.get_current_instruction_list();
 			for (auto &ins : list)
 			{
 				_generate_instruction(ins);

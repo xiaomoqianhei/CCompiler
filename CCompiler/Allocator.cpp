@@ -104,7 +104,7 @@ namespace Yradex
 			}
 
 			// allocate for temps
-			for (const auto &ins : table.get_instruction_list())
+			for (const auto &ins : table.get_current_instruction_list())
 			{
 				if (ins.argument_1 != Variable::null)
 				{

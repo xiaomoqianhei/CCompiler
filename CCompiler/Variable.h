@@ -89,6 +89,7 @@ namespace Yradex
 			const bool _is_temp;
 			VariableAddress _addr;
 			FunctionIdentifier _function;
+			int _ref = 0;
 
 		public:
 			static const std::shared_ptr<Variable> null;
@@ -169,10 +170,6 @@ namespace Yradex
 			{
 				_addr = va;
 			}
-			//const VariableAddress& get_address() const
-			//{
-			//	return _addr;
-			//}
 
 			bool is_const() const
 			{
@@ -201,6 +198,21 @@ namespace Yradex
 			int position() const
 			{
 				return _addr.position;
+			}
+
+			void increase_ref()
+			{
+				_ref++;
+			}
+
+			void decrease_ref()
+			{
+				_ref--;
+			}
+
+			int get_ref() const
+			{
+				return _ref;
 			}
 
 			std::string address_as_string()

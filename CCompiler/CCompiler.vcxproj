@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="Dag.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="FunctionDetail.h" />
     <ClInclude Include="Generator.h" />
@@ -165,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="Dag.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="FunctionDetail.cpp" />
     <ClCompile Include="Generator.cpp" />

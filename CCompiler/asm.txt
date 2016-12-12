@@ -44,8 +44,16 @@ main:
 		sw		$s0,		-12($fp)
 		sw		$s1,		-16($fp)
 		sw		$s2,		-20($fp)
-		add		$sp,		$sp,		-24
-		add		$s2,		$zero,		0
+		sw		$s3,		-24($fp)
+		add		$sp,		$sp,		-28
+		add		$s0,		$zero,		52
+		add		$s1,		$zero,		0
+		add		$s0,		$s0,		$s1
+		add		$s1,		$zero,		48
+		sub		$s0,		$s0,		$s1
+		add		$s0,		$s0,		6
+		sub		$s0,		$s0,		10
+		add		$s3,		$zero,		$s0
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -53,15 +61,15 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
 		la		$a0,		$Str31
 		add		$v0,		$zero,		4
 		syscall
 		add		$v0,		$zero,		5
 		syscall
-		add		$s1,		$zero,		$v0
-		add		$a0,		$zero,		$s1
+		add		$s2,		$zero,		$v0
+		add		$a0,		$zero,		$s2
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -69,8 +77,8 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -78,9 +86,9 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
-		add		$a0,		$zero,		$s1
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
+		add		$a0,		$zero,		$s2
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -88,9 +96,9 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
-		add		$a0,		$zero,		$s1
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
+		add		$a0,		$zero,		$s2
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -98,8 +106,8 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -107,8 +115,8 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
 		sw		$fp,		-4($sp)
 		add		$fp,		$sp,		$zero
 		sw		$ra,		-8($sp)
@@ -116,12 +124,12 @@ main:
 		lw		$fp,		-4($sp)
 		lw		$ra,		-8($sp)
 		add		$s0,		$zero,		$v0
-		add		$s0,		$s2,		$s0
-		add		$s2,		$zero,		$s0
+		add		$s0,		$s3,		$s0
+		add		$s3,		$zero,		$s0
 		la		$a0,		$Str32
 		add		$v0,		$zero,		4
 		syscall
-		add		$a0,		$zero,		$s2
+		add		$a0,		$zero,		$s3
 		add		$v0,		$zero,		1
 		syscall
 		la		$a0,		$Str33
@@ -134,6 +142,7 @@ main:
 		add		$v0,		$zero,		4
 		syscall
 		add		$v0,		$zero,		0
+		lw		$s3,		-24($fp)
 		lw		$s2,		-20($fp)
 		lw		$s1,		-16($fp)
 		lw		$s0,		-12($fp)
@@ -166,10 +175,10 @@ assign_and_expression_test:
 		add		$t0,		$s0,		$s1
 		add		$s2,		$zero,		$t0
 		add		$t0,		$s1,		$s2
-		add		$t2,		$zero,		$t0
-		add		$t0,		$s2,		$t2
+		add		$t3,		$zero,		$t0
+		add		$t0,		$s2,		$t3
 		add		$s3,		$zero,		$t0
-		add		$t0,		$t2,		$s3
+		add		$t0,		$t3,		$s3
 		add		$s4,		$zero,		$t0
 		add		$t0,		$s3,		$s4
 		add		$s5,		$zero,		$t0
@@ -314,8 +323,8 @@ $Lbl43:
 		sub		$t1,		$v0,		$t1
 		mul		$t1,		$t1,		3
 		add		$t0,		$t0,		$t1
-		add		$t3,		$zero,		$t0
-		beq		$t3,		51,		$Lbl44
+		add		$t2,		$zero,		$t0
+		beq		$t2,		51,		$Lbl44
 		la		$a0,		$Str29
 		add		$v0,		$zero,		4
 		syscall
@@ -346,8 +355,8 @@ io_test:
 		syscall
 		add		$v0,		$zero,		5
 		syscall
-		add		$t3,		$zero,		$v0
-		beq		$t3,		0,		$Lbl0
+		add		$t1,		$zero,		$v0
+		beq		$t1,		0,		$Lbl0
 		la		$a0,		$Str1
 		add		$v0,		$zero,		4
 		syscall
@@ -359,20 +368,20 @@ $Lbl0:
 		syscall
 		add		$v0,		$zero,		5
 		syscall
-		add		$t3,		$zero,		$v0
+		add		$t1,		$zero,		$v0
 		add		$v0,		$zero,		5
 		syscall
 		add		$t2,		$zero,		$v0
 		add		$v0,		$zero,		12
 		syscall
-		add		$t1,		$zero,		$v0
+		add		$t3,		$zero,		$v0
 		add		$v0,		$zero,		12
 		syscall
-		add		$t4,		$zero,		$v0
+		add		$t5,		$zero,		$v0
 		add		$v0,		$zero,		5
 		syscall
-		add		$t5,		$zero,		$v0
-		beq		$t3,		1,		$Lbl1
+		add		$t4,		$zero,		$v0
+		beq		$t1,		1,		$Lbl1
 		la		$a0,		$Str3
 		add		$v0,		$zero,		4
 		syscall
@@ -386,14 +395,14 @@ $Lbl1:
 		sub		$t0,		$t6,		1
 		add		$t6,		$zero,		$t0
 $Lbl2:
-		beq		$t1,		103,		$Lbl3
+		beq		$t3,		103,		$Lbl3
 		la		$a0,		$Str5
 		add		$v0,		$zero,		4
 		syscall
 		sub		$t0,		$t6,		1
 		add		$t6,		$zero,		$t0
 $Lbl3:
-		beq		$t4,		78,		$Lbl4
+		beq		$t5,		78,		$Lbl4
 		la		$a0,		$Str6
 		add		$v0,		$zero,		4
 		syscall
@@ -401,7 +410,7 @@ $Lbl3:
 		add		$t6,		$zero,		$t0
 $Lbl4:
 		add		$t0,		$zero,		-20
-		beq		$t5,		$t0,		$Lbl5
+		beq		$t4,		$t0,		$Lbl5
 		la		$a0,		$Str7
 		add		$v0,		$zero,		4
 		syscall
