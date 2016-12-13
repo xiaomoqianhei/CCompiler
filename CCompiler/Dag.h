@@ -19,8 +19,21 @@ namespace Yradex
 
 		public:
 			int id;
+			Type type;
+
 			PseudoOperator operator_;
 			std::shared_ptr<Variable> variable;
+			int value;
+
+			int left = -1;
+			int right = -1;
+			std::vector<int> parents;
+
+		public:
+			DagNode(int id_, Type type_)
+				: id(id_), type(type_)
+			{
+			}
 		};
 
 		class Dag
@@ -32,8 +45,12 @@ namespace Yradex
 
 		private:
 			PseudoTable &_pseudo_table;
-			std::unordered_map<int, DagNode> _node_map;
+			std::vector<DagNode> _node_vector;
 			std::unordered_map<std::shared_ptr<Variable>, int> _variable_map;
+
+		private:
+			int _get_node_id(std::shared_ptr<Variable> variable);
+			int _get_operator_id(PseudoOperator op, int left, int right);
 
 		public:
 			Dag(PseudoTable &pseudo_table)
@@ -41,7 +58,7 @@ namespace Yradex
 			{
 			}
 
-			void runDag(const FunctionIdentifier &f);
+			void run_dag(const FunctionIdentifier &f);
 		};
 	}
 }

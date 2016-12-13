@@ -49,7 +49,7 @@ namespace Yradex
 			template <typename T>
 			void _debug(const T &info)
 			{
-				if (Config::pseudo_table_debug)
+				if (Config::pseudo_instruction_debug)
 				{
 					std::basic_ostringstream<char_type> stream;
 					stream << "PseudoTable: " << info << std::flush;

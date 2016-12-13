@@ -102,22 +102,21 @@ namespace Yradex
 			return stream;
 		}
 
-		class SymbolUtilities
+		namespace SymbolUtilities
 		{
-		public:
-			static bool is_variable_type_identifier(Symbol symbol)
+			inline bool is_variable_type_identifier(Symbol symbol)
 			{
 				return symbol == Symbol::int_symbol
 					|| symbol == Symbol::char_symbol;
 			}
 
-			static bool is_type_identifier(Symbol symbol)
+			inline bool is_type_identifier(Symbol symbol)
 			{
 				return symbol == Symbol::void_symbol
 					|| is_variable_type_identifier(symbol);
 			}
 
-			static bool is_separator(Symbol symbol)
+			inline bool is_separator(Symbol symbol)
 			{
 				return symbol == Symbol::semicolon
 					|| symbol == Symbol::right_curly_brace
@@ -125,13 +124,13 @@ namespace Yradex
 					|| symbol == Symbol::right_parenthesis;
 			}
 
-			static bool is_end_of_statement(Symbol symbol)
+			inline bool is_end_of_statement(Symbol symbol)
 			{
 				return symbol == Symbol::semicolon
 					|| symbol == Symbol::right_curly_brace;
 			}
 
-			static bool is_compare_operator(Symbol symbol)
+			inline bool is_compare_operator(Symbol symbol)
 			{
 				return symbol == Symbol::equal
 					|| symbol == Symbol::not_equal
@@ -141,7 +140,7 @@ namespace Yradex
 					|| symbol == Symbol::greater_equal;
 			}
 
-			static Symbol type_after_calculate(Symbol, Symbol)
+			inline Symbol type_after_calculate(Symbol, Symbol)
 			{
 				//if (la == Symbol::int_symbol || ra == Symbol::int_symbol)
 				//{

@@ -186,7 +186,7 @@ namespace Yradex
 			// generate function object
 			_parse_compound_statement();
 
-			if (_get_last_instruction().operator_ != PseudoOperator::ret)
+			if (_get_last_instruction().get_operator() != PseudoOperator::ret)
 			{
 				// FIX retrun when if-else
 				_insert_instruction(PseudoInstruction(PseudoOperator::ret, _get_literal(0), Variable::null, Variable::null));
@@ -242,7 +242,7 @@ namespace Yradex
 			}
 			_parse_compound_statement();
 
-			if (_get_last_instruction().operator_ != PseudoOperator::ret)
+			if (_get_last_instruction().get_operator() != PseudoOperator::ret)
 			{
 				if (_get_current_function_detail()->get_return_type() == Symbol::void_symbol)
 				{

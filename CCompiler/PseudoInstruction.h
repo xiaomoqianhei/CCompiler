@@ -2,6 +2,8 @@
 
 #include "Utility.h"
 #include "Variable.h"
+#include "Error.h"
+#include "SymbolTable.h"
 
 #include <iomanip>
 
@@ -9,6 +11,8 @@ namespace Yradex
 {
 	namespace CCompiler
 	{
+
+		class PseudoTable;
 
 		enum class PseudoOperator
 		{
@@ -35,36 +39,78 @@ namespace Yradex
 			nop,
 		};
 
-		struct PseudoInstruction
+		namespace PseudoOperatorUtility
 		{
-			PseudoOperator operator_;
-			std::shared_ptr<Variable> argument_1;
-			std::shared_ptr<Variable> argument_2;
-			std::shared_ptr<Variable> result;
+			inline bool is_end_of_basic_block(PseudoOperator op)
+			{
+				switch (op)
+				{
+				case PseudoOperator::b:
+				case PseudoOperator::beq:
+				case PseudoOperator::bne:
+				case PseudoOperator::bltz:
+				case PseudoOperator::blez:
+				case PseudoOperator::bgtz:
+				case PseudoOperator::bgez:
+				case PseudoOperator::call:
+				case PseudoOperator::ret:
+				case PseudoOperator::label:
+					return true;
+				default:
+					break;
+				}
+				return false;
+			}
+		}
+
+		class PseudoInstruction
+		{
+			template <typename C> 
+			friend std::basic_ostream<C>& operator<<(std::basic_ostream<C> &s, const PseudoInstruction &pi);
+			
+		private:
+			PseudoOperator _operator_;
+			std::shared_ptr<Variable> _left_argument;
+			std::shared_ptr<Variable> _right_argument;
+			std::shared_ptr<Variable> _result;
 
 		public:
-			PseudoInstruction(PseudoOperator op, const std::shared_ptr<Variable> &a, 
-				const std::shared_ptr<Variable> &b, const std::shared_ptr<Variable> &res)
-				:operator_(op), argument_1(a), argument_2(b), result(res)
+			PseudoInstruction(PseudoOperator op, const std::shared_ptr<Variable> &a,
+				const std::shared_ptr<Variable> &b, const std::shared_ptr<Variable> &res);
+			PseudoInstruction(const PseudoInstruction &ins);
+			PseudoInstruction& operator=(PseudoInstruction ins)
 			{
-				argument_1->increase_ref();
-				argument_2->increase_ref();
+				swap(ins);
+			}
+			~PseudoInstruction();
+
+			PseudoOperator get_operator() const
+			{
+				return _operator_;
+			}
+			std::shared_ptr<Variable> get_left_argument() const
+			{
+				return _left_argument;
+			}
+			std::shared_ptr<Variable> get_right_argument() const
+			{
+				return _right_argument;
+			}
+			std::shared_ptr<Variable> get_result() const
+			{
+				return _result;
 			}
 
-			~PseudoInstruction()
-			{
-				argument_1->decrease_ref();
-				argument_2->decrease_ref();
-			}
-
+			void swap(PseudoInstruction &ins);
 			void clear()
 			{
-				operator_ = PseudoOperator::nop;
-				argument_1 = Variable::null;
-				argument_2 = Variable::null;
-				result = Variable::null;
+				PseudoInstruction nop = PseudoInstruction(PseudoOperator::nop, Variable::null, Variable::null, Variable::null);
+				swap(nop);
 			}
-				
+
+			Error check_validation() const;
+			PseudoInstruction to_literal(PseudoTable &pseudo_table);
+
 		};
 
 		template <typename C>
@@ -100,10 +146,10 @@ namespace Yradex
 		template <typename C>
 		std::basic_ostream<C>& operator<<(std::basic_ostream<C> &s, const PseudoInstruction &pi)
 		{
-			return s << std::setw(10) << std::left << pi.operator_
-				<< std::setw(40) << std::left << *pi.argument_1
-				<< std::setw(40) << std::left << *pi.argument_2
-				<< std::setw(40) << std::left << *pi.result;
+			return s << std::setw(10) << std::left << pi._operator_
+				<< std::setw(40) << std::left << *pi._left_argument
+				<< std::setw(40) << std::left << *pi._right_argument
+				<< std::setw(40) << std::left << *pi._result;
 		}
 
 	}

@@ -15,7 +15,7 @@ namespace Yradex
 			const static std::string error_level = "DEBUG";
 			const static bool lexical_analyzer_debug = false;
 			const static bool parser_debug = false;
-			const static bool pseudo_table_debug = false;
+			const static bool pseudo_instruction_debug = false;
 			const static bool generator_debug = false;
 		};
 

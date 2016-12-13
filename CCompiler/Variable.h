@@ -66,16 +66,17 @@ namespace Yradex
 			}
 		};
 
-		enum class VariableType
-		{
-			variable,
-			const_variable,
-			array,
-			label,
-		};
-
 		class Variable
 		{
+		public:
+			enum class Type
+			{
+				variable,
+				const_variable,
+				array,
+				label,
+			};
+
 		public:
 			using string_type = std::string;
 			using char_type = typename string_type::value_type;
@@ -84,7 +85,7 @@ namespace Yradex
 			const string_type _name;
 			const Symbol _return_type;
 			const size_t _array_length;
-			const VariableType _variable_type;
+			const Type _variable_type;
 			int _value;
 			const bool _is_temp;
 			VariableAddress _addr;
@@ -95,7 +96,7 @@ namespace Yradex
 			static const std::shared_ptr<Variable> null;
 
 		public:
-			Variable(const string_type &name, Symbol return_type, VariableType variable_type,
+			Variable(const string_type &name, Symbol return_type, Type variable_type,
 				size_t length, int value, const FunctionIdentifier &function, bool is_temp)
 				: _name(name), _return_type(return_type), _array_length(length),
 				_variable_type(variable_type), _value(value), _is_temp(is_temp), _function(function)
@@ -106,24 +107,24 @@ namespace Yradex
 				new_const_variable(const string_type &name, Symbol type,
 					int value, const FunctionIdentifier &function, bool is_temp)
 			{
-				return std::make_shared<Variable>(name, type, VariableType::const_variable, 0, value, function, is_temp);
+				return std::make_shared<Variable>(name, type, Type::const_variable, 0, value, function, is_temp);
 			}
 			static std::shared_ptr<Variable>
 				new_variale(const string_type &name, Symbol type,
 					const FunctionIdentifier &function, bool is_temp)
 			{
-				return std::make_shared<Variable>(name, type, VariableType::variable, 0, 0, function, is_temp);
+				return std::make_shared<Variable>(name, type, Type::variable, 0, 0, function, is_temp);
 			}
 			static std::shared_ptr<Variable>
 				new_array_variable(const string_type &name, Symbol type,
 					size_t length, const FunctionIdentifier &function)
 			{
-				return std::make_shared<Variable>(name, type, VariableType::array, length, 0, function, false);
+				return std::make_shared<Variable>(name, type, Type::array, length, 0, function, false);
 			}
 			static std::shared_ptr<Variable>
 				new_label(const string_type &name, const FunctionIdentifier &function)
 			{
-				return std::make_shared<Variable>(name, Symbol::eof, VariableType::label, 0, 0, function, false);
+				return std::make_shared<Variable>(name, Symbol::eof, Type::label, 0, 0, function, false);
 			}
 
 			static std::shared_ptr<Variable> get_temp_variable(Symbol type, const FunctionIdentifier &function);
@@ -173,14 +174,14 @@ namespace Yradex
 
 			bool is_const() const
 			{
-				return _variable_type == VariableType::const_variable;
+				return _variable_type == Type::const_variable;
 			}
 			bool is_temp() const
 			{
 				return _is_temp;
 			}
 
-			VariableType get_variable_type()
+			Type get_variable_type()
 			{
 				return _variable_type;
 			}

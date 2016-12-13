@@ -7,7 +7,7 @@ namespace Yradex
 	namespace CCompiler
 	{
 		const std::shared_ptr<Variable> Variable::null = 
-			std::make_shared<Variable>("", Symbol::eof, VariableType::const_variable, 0, 0, string_type(), false);
+			std::make_shared<Variable>("", Symbol::eof, Variable::Type::const_variable, 0, 0, string_type(), false);
 
 		std::shared_ptr<Variable> Variable::get_temp_variable(Symbol type, const FunctionIdentifier & function)
 		{

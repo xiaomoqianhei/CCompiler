@@ -17,39 +17,25 @@ namespace Yradex
 			_current_function = f;
 		}
 
-		Error PseudoTable::insert_instruction(const PseudoInstruction & i)
+		Error PseudoTable::insert_instruction(const PseudoInstruction & ins)
 		{
 			// leaf
-			if (i.operator_ == PseudoOperator::call)
+			if (ins.get_operator() == PseudoOperator::call)
 			{
 				_symbol_table.set_leaf_function(_current_function, false);
 			}
 
-			// array
-			if (i.argument_1->get_variable_type() == VariableType::array && i.operator_ != PseudoOperator::load)
+			Error error = ins.check_validation();
+			if (error != Error::null)
 			{
-				return Error::array_without_index;
-			}
-			if (i.argument_2->get_variable_type() == VariableType::array)
-			{
-				return Error::array_without_index;
-			}
-			if (i.result->get_variable_type() == VariableType::array && i.operator_ != PseudoOperator::store)
-			{
-				return Error::array_without_index;
+				return error;
 			}
 
-			// const
-			if (i.operator_ == PseudoOperator::assign)
-			{
-				if (i.result->is_const())
-				{
-					return Error::assign_to_const;
-				}
-			}
+			PseudoInstruction new_ins(ins);
+			new_ins.to_literal(*this);
 
-			_instruction_map[_current_function].push_back(i);
-			_debug(i);
+			_instruction_map[_current_function].push_back(new_ins);
+			_debug(ins);
 			return Error::null;
 		}
 
