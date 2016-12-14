@@ -39,6 +39,5 @@ namespace Yradex
 			return Error::null;
 		}
 
-
 	}
 }

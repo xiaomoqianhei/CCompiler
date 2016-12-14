@@ -63,13 +63,11 @@ namespace Yradex
 				return _error_count;
 			}
 
-			void raise(Error error, Level level);
-			
+			void raise(Error error, Level level);	
+			void raise(Error error, const string_type &info, Level level);
 			void raise(Error error, std::string filename, size_t line_num, size_t char_num, Level level);
-
 			void raise(Error error, const string_type &info,
 				std::string filename, size_t line_num, size_t char_num, Level level);
-
 			void debug(const string_type &info);
 
 		};

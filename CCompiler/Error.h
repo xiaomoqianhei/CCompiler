@@ -39,6 +39,7 @@ namespace Yradex
 			array_without_index,
 			illegal_argument_list,
 			use_return_value_of_void_function,
+			devide_by_zero,
 		};
 
 		template <typename C>
@@ -73,6 +74,7 @@ namespace Yradex
 				{ Error::array_without_index, "array_without_index" },
 				{ Error::illegal_argument_list, "illegal_argument_list" },
 				{ Error::use_return_value_of_void_function, "use_return_value_of_void_function" },
+				{ Error::devide_by_zero, "devide_by_zero" },
 			};
 
 			s << map.at(e);

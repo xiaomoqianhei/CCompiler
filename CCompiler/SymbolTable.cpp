@@ -69,13 +69,20 @@ namespace Yradex
 			{
 				return *iter;
 			}
-			return Variable::null;
+			return Variable::null();
 		}
 		std::shared_ptr<Variable> SymbolTable::get_literal(int value)
 		{
 			std::basic_ostringstream<char_type> stream;
 			stream << "$Ltr" << value;
 			string_type name = stream.str();
+
+			auto iter = std::find_if(_global_set.cbegin(), _global_set.cend(),
+				[&name](const std::shared_ptr<Variable> &p) {return p->get_name() == name; });
+			if (iter != _global_set.cend())
+			{
+				return *iter;
+			}
 
 			std::shared_ptr<Variable> v = Variable::new_const_variable(name, Symbol::int_symbol, value, FunctionIdentifier::global, false);
 

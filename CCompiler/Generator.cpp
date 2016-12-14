@@ -46,8 +46,7 @@ namespace Yradex
 
 			// main func
 			{
-				PseudoTable::PseudoTableFunctionSwitcher switcher = 
-					PseudoTable::PseudoTableFunctionSwitcher(_table, string_type("main"));
+				PseudoTable::PseudoTableFunctionSwitcher switcher(_table, string_type("main"));
 				_generate_function();
 			}
 
@@ -59,8 +58,7 @@ namespace Yradex
 				{
 					continue;
 				}
-				PseudoTable::PseudoTableFunctionSwitcher switcher =
-					PseudoTable::PseudoTableFunctionSwitcher(_table, f);
+				PseudoTable::PseudoTableFunctionSwitcher switcher(_table, f);
 				_generate_function();
 			}
 
@@ -114,7 +112,7 @@ namespace Yradex
 			}
 
 		}
-		void Generator::_generate_instruction(PseudoInstruction & ins)
+		void Generator::_generate_instruction(const PseudoInstruction & ins)
 		{
 			// print pseudo code
 			if (Config::generator_debug && error_handler_type::instance().should_raise(error_handler_type::Level::debug))
@@ -126,14 +124,17 @@ namespace Yradex
 			{
 			case PseudoOperator::add:
 			{
+				PseudoInstruction new_ins(ins);
+				if (new_ins.get_left_argument()->is_const())
+				{
+					new_ins.swap_arguments();
+				}
 
-				_rearrange_instruction(ins);
-
-				string_type a1 = _get_argument_1(ins);
-				string_type a2 = _get_argument_2(ins);
+				string_type a1 = _get_argument_1(new_ins);
+				string_type a2 = _get_argument_2(new_ins);
 
 				// res
-				auto res = ins.get_result();
+				auto res = new_ins.get_result();
 				if (res->in_register())
 				{
 					_print_instruction(MipsOperator::add, res->address_as_string(), a1, a2);
@@ -173,13 +174,16 @@ namespace Yradex
 			}
 			case PseudoOperator::mul:
 			{
+				PseudoInstruction new_ins(ins);
+				if (new_ins.get_left_argument()->is_const())
+				{
+					new_ins.swap_arguments();
+				}
 
-				_rearrange_instruction(ins);
+				string_type a1 = _get_argument_1(new_ins);
+				string_type a2 = _get_argument_2(new_ins);
 
-				string_type a1 = _get_argument_1(ins);
-				string_type a2 = _get_argument_2(ins);
-
-				auto res = ins.get_result();
+				auto res = new_ins.get_result();
 				if (res->in_register())
 				{
 					_print_instruction(MipsOperator::mul, res->address_as_string(), a1, a2);
@@ -221,22 +225,32 @@ namespace Yradex
 				break;
 			}
 			case PseudoOperator::b:
-				_print_instruction(MipsOperator::b, ins.get_left_argument());
+				_print_instruction(MipsOperator::b, ins.get_result());
 				break;
 			case PseudoOperator::beq:
 			{
-				_rearrange_instruction(ins);
-				string_type a1 = _get_argument_1(ins);
-				string_type a2 = _get_argument_2(ins);
-				_print_instruction(MipsOperator::beq, a1, a2, ins.get_result());
+				PseudoInstruction new_ins(ins);
+				if (new_ins.get_left_argument()->is_const())
+				{
+					new_ins.swap_arguments();
+				}
+
+				string_type a1 = _get_argument_1(new_ins);
+				string_type a2 = _get_argument_2(new_ins);
+				_print_instruction(MipsOperator::beq, a1, a2, new_ins.get_result());
 				break;
 			}
 			case PseudoOperator::bne:
 			{
-				_rearrange_instruction(ins);
-				string_type a1 = _get_argument_1(ins);
-				string_type a2 = _get_argument_2(ins);
-				_print_instruction(MipsOperator::bne, a1, a2, ins.get_result());
+				PseudoInstruction new_ins(ins);
+				if (new_ins.get_left_argument()->is_const())
+				{
+					new_ins.swap_arguments();
+				}
+
+				string_type a1 = _get_argument_1(new_ins);
+				string_type a2 = _get_argument_2(new_ins);
+				_print_instruction(MipsOperator::bne, a1, a2, new_ins.get_result());
 				break;
 			}
 			case PseudoOperator::bltz:
@@ -289,7 +303,7 @@ namespace Yradex
 			}
 			case PseudoOperator::print:
 				// string
-				if (ins.get_left_argument() != Variable::null)
+				if (ins.get_left_argument() != Variable::null())
 				{
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
 					{
@@ -307,7 +321,7 @@ namespace Yradex
 					}
 				}
 				// variable
-				if (ins.get_right_argument() != Variable::null)
+				if (ins.get_right_argument() != Variable::null())
 				{
 					auto a2 = _get_argument_2(ins);
 					if (!_table.get_current_function_detail()->get_parameter_list().empty())
@@ -362,7 +376,7 @@ namespace Yradex
 				_print_instruction(MipsOperator::lw, "$ra", "-8($sp)");
 
 				// return value
-				if (ins.get_result() != Variable::null)
+				if (ins.get_result() != Variable::null())
 				{
 					auto res = ins.get_result();
 					if (res->in_register())
@@ -541,17 +555,6 @@ namespace Yradex
 				break;
 			}
 		}
-		void Generator::_rearrange_instruction(PseudoInstruction & ins)
-		{
-			if (ins.get_left_argument() == Variable::null || ins.get_right_argument() == Variable::null)
-			{
-				return;
-			}
-			if (ins.get_left_argument()->is_const())
-			{
-				std::swap(ins.get_left_argument(), ins.get_right_argument());
-			}
-		}
 		void Generator::_try_save_argument_register()
 		{
 			if (_arg_count == 0)
@@ -569,7 +572,7 @@ namespace Yradex
 				}
 			}
 		}
-		Generator::string_type Generator::_get_argument_1(PseudoInstruction & ins)
+		Generator::string_type Generator::_get_argument_1(const PseudoInstruction & ins)
 		{
 			if (ins.get_left_argument()->is_const())
 			{
@@ -588,7 +591,7 @@ namespace Yradex
 				return ta->address_as_string();
 			}
 		}
-		Generator::string_type Generator::_get_argument_2(PseudoInstruction & ins)
+		Generator::string_type Generator::_get_argument_2(const PseudoInstruction & ins)
 		{
 			if (ins.get_right_argument()->is_const())
 			{

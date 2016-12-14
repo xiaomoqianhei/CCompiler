@@ -1,12 +1,15 @@
 #include "Dag.h"
 
+#include <iterator>
+#include <fstream>
+
 namespace Yradex
 {
 	namespace CCompiler
 	{
-		int Dag::_get_node_id(std::shared_ptr<Variable> variable)
+		int Dag::_calculate_node_id(std::shared_ptr<Variable> variable)
 		{
-			if (variable == Variable::null)
+			if (variable == Variable::null())
 			{
 				return -1;
 			}
@@ -23,106 +26,593 @@ namespace Yradex
 			{
 				int id = _node_vector.size();
 				DagNode node(id, DagNode::Type::const_);
-				node.value = variable->get_value();
+				node.variable = variable;
 				_node_vector.push_back(node);
+				_variable_map.insert(std::make_pair(variable, id));
 				return id;
 			}
 			case Variable::Type::variable:
 			case Variable::Type::array:
+			case Variable::Type::label:
+			case Variable::Type::string:
 			{
 				int id = _node_vector.size();
 				DagNode node(id, DagNode::Type::variable);
 				node.variable = variable;
 				_node_vector.push_back(node);
+				_variable_map.insert(std::make_pair(variable, id));
 				return id;
 			}
-			case Variable::Type::label:
 			default:
-				assert(false);
 				break;
 			}
 			return -1;
 		}
-		int Dag::_get_operator_id(PseudoOperator op, int left, int right)
+		int Dag::_calculate_operator_node_id(PseudoOperator op, int left_arg_id, int right_arg_id)
 		{
 			switch (op)
 			{
 			case PseudoOperator::add:
 			{
-				if (_node_vector[left].type == DagNode::Type::const_ && _node_vector[right].type == DagNode::Type::const_)
-				{
-					// TODO
-				}
-				auto iter = std::find_if(_node_vector.cbegin(), _node_vector.cend(), 
-					[op, left, right](const DagNode &node) {
-					return node.operator_ == op 
-						&& ((node.left == left && node.right == right) || (node.left == right && node.right == left)); 
-				});
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
 
-				break;
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					return _calculate_node_id(_pseudo_table.get_literal(
+						left_arg_node.variable->get_value() + right_arg_node.variable->get_value()));
+				}
+
+				return __find_or_insert_operator_node(op, left_arg_id, right_arg_id, true);
 			}
 			case PseudoOperator::sub:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					return _calculate_node_id(_pseudo_table.get_literal(
+						left_arg_node.variable->get_value() - right_arg_node.variable->get_value()));
+				}
+
+				return __find_or_insert_operator_node(op, left_arg_id, right_arg_id, false);
+			}
 			case PseudoOperator::mul:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					return _calculate_node_id(_pseudo_table.get_literal(
+						left_arg_node.variable->get_value() * right_arg_node.variable->get_value()));
+				}
+
+				return __find_or_insert_operator_node(op, left_arg_id, right_arg_id, true);
+			}
 			case PseudoOperator::div:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					if (right_arg_node.variable->get_value() == 0)
+					{
+						error_handler_type::instance().raise(Error::devide_by_zero,
+							"in function " + _pseudo_table.get_current_function_identifier().get_name(),
+							error_handler_type::Level::error);
+						return _calculate_node_id(_pseudo_table.get_literal(1));
+					}
+					else
+					{
+						return _calculate_node_id(_pseudo_table.get_literal(
+							left_arg_node.variable->get_value() / right_arg_node.variable->get_value()));
+					}
+				}
+
+				return __find_or_insert_operator_node(op, left_arg_id, right_arg_id, false);
+			}
 			case PseudoOperator::b:
-				break;
+			{
+				return __insert_operator_node(PseudoOperator::b);
+			}
 			case PseudoOperator::beq:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() == right_arg_node.variable->get_value())
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id, right_arg_id);
+			}
 			case PseudoOperator::bne:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+				DagNode &right_arg_node = _node_vector[right_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_ && right_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() != right_arg_node.variable->get_value())
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id, right_arg_id);
+			}
 			case PseudoOperator::bltz:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() < 0)
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id);
+			}
 			case PseudoOperator::blez:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() <= 0)
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id);
+			}
 			case PseudoOperator::bgtz:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() > 0)
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id);
+			}
 			case PseudoOperator::bgez:
-				break;
+			{
+				DagNode &left_arg_node = _node_vector[left_arg_id];
+
+				// if both are const calculate it
+				if (left_arg_node.type == DagNode::Type::const_)
+				{
+					if (left_arg_node.variable->get_value() >= 0)
+					{
+						return __insert_operator_node(PseudoOperator::b);
+					}
+					else
+					{
+						return -1;
+					}
+				}
+
+				return __insert_operator_node(op, left_arg_id);
+			}
 			case PseudoOperator::read:
-				break;
+				return __insert_operator_node(op);
 			case PseudoOperator::print:
-				break;
+				return __insert_operator_node(op, left_arg_id, right_arg_id);
 			case PseudoOperator::call:
-				break;
+				return __insert_operator_node(op, left_arg_id);
 			case PseudoOperator::ret:
-				break;
+				return __insert_operator_node(op, left_arg_id);
 			case PseudoOperator::label:
-				break;
+				return __insert_operator_node(op, left_arg_id);
 			case PseudoOperator::assign:
-				break;
+				return left_arg_id;
 			case PseudoOperator::load:
-				break;
+				return __find_or_insert_operator_node(op, left_arg_id, right_arg_id, false);
 			case PseudoOperator::store:
-				break;
+				return __insert_operator_node(op, left_arg_id, right_arg_id);
 			case PseudoOperator::arg:
-				break;
+				return __insert_operator_node(op, left_arg_id);
 			case PseudoOperator::nop:
 				break;
 			default:
 				break;
 			}
-			return 0;
+			return -1;
+		}
+		void Dag::_calculate_result_node(int operator_id, std::shared_ptr<Variable> result)
+		{
+			assert(operator_id != -1);
+
+			if (result == Variable::null())
+			{
+				return;
+			}
+
+			_node_vector[operator_id].result = result;
+
+			_variable_map.insert_or_assign(result, operator_id);
+		}
+		void Dag::_remove_useless_instructions(std::list<PseudoInstruction>& list)
+		{
+			int this_count = list.size();
+			int last_count = 0;
+			while (this_count != last_count)
+			{
+				for (auto iter = list.begin(); iter != list.end();)
+				{
+					if ((!PseudoOperatorUtility::has_side_effect(iter->get_operator()))
+						&& iter->get_result()->get_ref() == 1)
+					{
+						iter = list.erase(iter);
+					}
+					else
+					{
+						++iter;
+					}
+				}
+				last_count = this_count;
+				this_count = list.size();
+			}
+		}
+		void Dag::_generate_code_from_map(std::list<PseudoInstruction>& list)
+		{
+			for (auto &node : _node_vector)
+			{
+				if (node.parents.empty() || PseudoOperatorUtility::has_side_effect(node.operator_))
+				{
+					_generate_code_from_node(list, node);
+				}
+			}
+		}
+		void Dag::_generate_code_from_node(std::list<PseudoInstruction>& list, DagNode & node)
+		{
+			if (node.generated)
+			{
+				return;
+			}
+			node.generated = true;
+
+			if (node.type != DagNode::Type::operator_)
+			{
+				for (const auto &p : _variable_map)
+				{
+					if (p.second == node.id
+						&& p.first->get_variable_type() == Variable::Type::variable
+						&& p.first != node.variable)
+					{
+						// FIX check it
+						// copy result
+						if (p.first->get_variable_type() == Variable::Type::variable)
+						{
+							auto temp = _pseudo_table.declear_temp_variable(p.first->get_type());
+							list.push_back(PseudoInstruction(PseudoOperator::assign, p.first, Variable::null(), temp));
+
+							for (auto &n : _node_vector)
+							{
+								if (n.variable == p.first)
+								{
+									n.variable = temp;
+								}
+							}
+						}
+						list.push_back(PseudoInstruction(PseudoOperator::assign, node.variable, Variable::null(), p.first));
+					}
+				}
+			}
+			else
+			{
+				std::shared_ptr<Variable> left_arg = Variable::null();
+				std::shared_ptr<Variable> right_arg = Variable::null();
+
+				// get arguments
+				if (node.left != -1)
+				{
+					_generate_code_from_node(list, _node_vector[node.left]);
+				}
+				if (node.right != -1)
+				{
+					_generate_code_from_node(list, _node_vector[node.right]);
+					right_arg = _node_vector[node.right].variable;
+				}
+				if (node.left != -1)
+				{
+					left_arg = _node_vector[node.left].variable;
+				}
+
+				// get result
+				std::shared_ptr<Variable> result = node.result;
+
+				if (!PseudoOperatorUtility::has_side_effect(node.operator_)
+					|| node.operator_ == PseudoOperator::load	// which writes result
+					|| node.operator_ == PseudoOperator::read)
+				{
+					auto iter = std::find_if(_variable_map.cbegin(), _variable_map.cend(),
+						[&node](const std::pair<std::shared_ptr<Variable>, int> &p) {
+						return p.second == node.id && !p.first->is_temp();
+					});
+
+					if (iter == _variable_map.cend())
+					{
+						result = _pseudo_table.declear_temp_variable(Symbol::int_symbol);
+					}
+					else
+					{
+						result = iter->first;
+					}
+				}
+
+				// FIX check it
+				// copy result
+				if (result->get_variable_type() == Variable::Type::variable)
+				{
+					auto temp = _pseudo_table.declear_temp_variable(result->get_type());
+					list.push_back(PseudoInstruction(PseudoOperator::assign, result, Variable::null(), temp));
+
+					for (auto &n : _node_vector)
+					{
+						if (n.variable == result)
+						{
+							n.variable = temp;
+						}
+					}
+				}
+
+
+				// generate code
+				node.variable = result;
+				list.push_back(PseudoInstruction(node.operator_, left_arg, right_arg, result));
+
+				// assign to all
+				for (const auto &p : _variable_map)
+				{
+					if (p.second == node.id && p.first != result
+						&& p.first->get_variable_type() == Variable::Type::variable)
+					{
+						// FIX check it
+						// copy result
+						if (p.first->get_variable_type() == Variable::Type::variable)
+						{
+							auto temp = _pseudo_table.declear_temp_variable(p.first->get_type());
+							list.push_back(PseudoInstruction(PseudoOperator::assign, p.first, Variable::null(), temp));
+
+							for (auto &n : _node_vector)
+							{
+								if (n.variable == p.first)
+								{
+									n.variable = temp;
+								}
+							}
+						}
+
+						list.push_back(PseudoInstruction(PseudoOperator::assign, node.variable, Variable::null(), p.first));
+					}
+				}
+			}
+		}
+		int Dag::__find_or_insert_operator_node(PseudoOperator op, int left_arg_id)
+		{
+			DagNode &left_arg_node = _node_vector[left_arg_id];
+
+			// find this node
+			auto &intersection = left_arg_node.parents;
+
+			auto &node_vector = _node_vector;
+			auto iter = std::find_if(intersection.cbegin(), intersection.cend(),
+				[op, &node_vector](int id) { return node_vector[id].operator_ == op; }
+			);
+
+			// found, return its id
+			if (iter != intersection.cend())
+			{
+				return *iter;
+			}
+
+			// not found, create it
+			return __insert_operator_node(op, left_arg_id);
+		}
+		int Dag::__find_or_insert_operator_node(PseudoOperator op, int left_arg_id, int right_arg_id, bool commutative)
+		{
+			DagNode &left_arg_node = _node_vector[left_arg_id];
+			DagNode &right_arg_node = _node_vector[right_arg_id];
+
+			if (commutative)
+			{
+				// find this node
+				std::vector<int> intersection;
+
+				std::set_intersection(left_arg_node.parents.cbegin(), left_arg_node.parents.cend(),
+					right_arg_node.parents.cbegin(), right_arg_node.parents.cend(),
+					std::back_inserter(intersection));
+
+				auto &node_vector = _node_vector;
+				auto iter = std::find_if(intersection.cbegin(), intersection.cend(),
+					[op, &node_vector](int id) { return node_vector[id].operator_ == op; }
+				);
+
+				// found, return its id
+				if (iter != intersection.cend())
+				{
+					return *iter;
+				}
+			}
+			else
+			{
+				// find this node
+				std::vector<int> intersection;
+
+				std::set_intersection(left_arg_node.parents.cbegin(), left_arg_node.parents.cend(),
+					right_arg_node.parents.cbegin(), right_arg_node.parents.cend(),
+					std::back_inserter(intersection));
+
+				auto &node_vector = _node_vector;
+				auto iter = std::find_if(intersection.cbegin(), intersection.cend(),
+					[op, left_arg_id, right_arg_id, &node_vector](int id) {
+					return node_vector[id].operator_ == op
+						&& node_vector[id].left == left_arg_id
+						&& node_vector[id].right == right_arg_id;
+				});
+
+				// found, return its id
+				if (iter != intersection.cend())
+				{
+					return *iter;
+				}
+			}
+
+			// not found, create it
+			return __insert_operator_node(op, left_arg_id, right_arg_id);
+		}
+		int Dag::__insert_operator_node(PseudoOperator op)
+		{
+			int id = _node_vector.size();
+			DagNode node(id, DagNode::Type::operator_);
+			node.operator_ = op;
+			_node_vector.push_back(node);
+			return id;
+		}
+		int Dag::__insert_operator_node(PseudoOperator op, int left_arg_id)
+		{
+			int id = _node_vector.size();
+			DagNode node(id, DagNode::Type::operator_);
+			node.operator_ = op;
+			if (left_arg_id != -1)
+			{
+				node.left = left_arg_id;
+				_node_vector[left_arg_id].parents.insert(id);
+			}
+			_node_vector.push_back(node);
+			return id;
+		}
+		int Dag::__insert_operator_node(PseudoOperator op, int left_arg_id, int right_arg_id)
+		{
+			int id = _node_vector.size();
+			DagNode node(id, DagNode::Type::operator_);
+			node.operator_ = op;
+			if (left_arg_id != -1)
+			{
+				node.left = left_arg_id;
+				_node_vector[left_arg_id].parents.insert(id);
+			}
+			if (right_arg_id != -1)
+			{
+				node.right = right_arg_id;
+				_node_vector[right_arg_id].parents.insert(id);
+			}
+			_node_vector.push_back(node);
+			return id;
 		}
 		void Dag::run_dag(const FunctionIdentifier & f)
 		{
 			PseudoTable::PseudoTableFunctionSwitcher(_pseudo_table, f);
 			std::list<PseudoInstruction> list;
 
-			for (const auto &ins : _pseudo_table.get_current_instruction_list())
+			auto &original_list = _pseudo_table.get_current_instruction_list();
+			for (auto iter = original_list.cbegin(); iter != original_list.cend();)
 			{
-				int left_arg_id = _get_node_id(ins.get_left_argument());
-				int right_arg_id = _get_node_id(ins.get_right_argument());
-				int operator_id = _get_operator_id(ins.get_operator(), left_arg_id, right_arg_id);
+				auto &ins = *iter;
+				int left_arg_id = _calculate_node_id(ins.get_left_argument());
+				int right_arg_id = _calculate_node_id(ins.get_right_argument());
+				int operator_id = _calculate_operator_node_id(ins.get_operator(), left_arg_id, right_arg_id);
 
-				if (PseudoOperatorUtility::is_end_of_basic_block(ins.get_operator()))
+				if (operator_id == -1)
 				{
-
+					++iter;
+					continue;
 				}
-					// TODO switch list
+
+				_calculate_result_node(operator_id, ins.get_result());
+
+				if (PseudoOperatorUtility::is_end_of_basic_block(ins.get_operator()) && operator_id != -1)
+				{
+					++iter;
+					std::list<PseudoInstruction> temp_list;
+					_generate_code_from_map(temp_list);
+
+					if (!temp_list.empty() && temp_list.back().get_operator() == PseudoOperator::b)
+					{
+						while (iter->get_operator() != PseudoOperator::label)
+						{
+							++iter;
+						}
+						if (temp_list.back().get_result() == iter->get_left_argument())
+						{
+							++iter;
+							temp_list.clear();
+							_node_vector.pop_back();
+							continue;
+						}
+					}
+
+					list.splice(list.end(), temp_list);
+					
+					_variable_map.clear();
+					_node_vector.clear();
+				}
+				else
+				{
+					++iter;
+				}
 			}
+
+			_pseudo_table.set_instruction_list(std::list<PseudoInstruction>());
+
+			_remove_useless_instructions(list);
+			
+			// TEST
+			std::ofstream stream("log.txt", std::ios::app);
+
+			stream << std::endl << std::endl << f.get_name() << std::endl;
+			for (auto &i : list)
+			{
+				stream << i << std::endl;
+			}
+
+			_pseudo_table.set_instruction_list(list);
+
 		}
 	}
 }

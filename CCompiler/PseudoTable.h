@@ -133,11 +133,11 @@ namespace Yradex
 				return _symbol_table.get_function_detail(f);
 			}
 
-			PseudoInstruction get_last_instruction() const
+			const PseudoInstruction& get_last_instruction() const
 			{
 				if (_instruction_map.find(_current_function) == _instruction_map.cend())
 				{
-					return PseudoInstruction(PseudoOperator::nop, Variable::null, Variable::null, Variable::null);
+					return PseudoInstruction::nop();
 				}
 				return _instruction_map.at(_current_function).back();
 			}
@@ -147,7 +147,7 @@ namespace Yradex
 				return _symbol_table.get_function_list();
 			}
 
-			std::list<PseudoInstruction> get_current_instruction_list() const
+			const std::list<PseudoInstruction>& get_current_instruction_list() const
 			{
 				return _instruction_map.at(_current_function);
 			}

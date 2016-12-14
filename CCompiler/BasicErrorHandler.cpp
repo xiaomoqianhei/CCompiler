@@ -41,6 +41,24 @@ namespace Yradex
 				exit(0);
 			}
 		}
+		void BasicErrorHandler::raise(Error error, const string_type & info, Level level)
+		{
+			if (!should_raise(level))
+			{
+				return;
+			}
+			if (level == Level::error)
+			{
+				_error_count++;
+			}
+			std::cerr << _level_map.at(level) << ": "
+				<< error << ": " << info << std::endl;
+			if (level == Level::fatal)
+			{
+				system("pause");
+				exit(0);
+			}
+		}
 		void BasicErrorHandler::raise(Error error, std::string filename, size_t line_num, size_t char_num, Level level)
 		{
 			if (!should_raise(level))

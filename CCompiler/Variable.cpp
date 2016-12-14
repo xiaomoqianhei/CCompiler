@@ -6,8 +6,7 @@ namespace Yradex
 {
 	namespace CCompiler
 	{
-		const std::shared_ptr<Variable> Variable::null = 
-			std::make_shared<Variable>("", Symbol::eof, Variable::Type::const_variable, 0, 0, string_type(), false);
+
 
 		std::shared_ptr<Variable> Variable::get_temp_variable(Symbol type, const FunctionIdentifier & function)
 		{
@@ -28,7 +27,7 @@ namespace Yradex
 			stream << "$Str" << id++;
 			string_type name = stream.str();
 
-			return Variable::new_const_variable(name, Symbol::string, 0, FunctionIdentifier::global, false);
+			return Variable::new_string_variable(name, FunctionIdentifier::global);
 		}
 
 		std::shared_ptr<Variable> Variable::get_label()

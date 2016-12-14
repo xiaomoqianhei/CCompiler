@@ -23,7 +23,6 @@ namespace Yradex
 			void _optimize(const FunctionIdentifier &f);
 
 			void _common_subexpression_elimination(const FunctionIdentifier &f);
-			void _calculate_constant_instruction();
 
 
 		public:

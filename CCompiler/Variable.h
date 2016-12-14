@@ -75,6 +75,7 @@ namespace Yradex
 				const_variable,
 				array,
 				label,
+				string,
 			};
 
 		public:
@@ -87,13 +88,18 @@ namespace Yradex
 			const size_t _array_length;
 			const Type _variable_type;
 			int _value;
-			const bool _is_temp;
+			bool _is_temp;
 			VariableAddress _addr;
 			FunctionIdentifier _function;
 			int _ref = 0;
 
 		public:
-			static const std::shared_ptr<Variable> null;
+			static const std::shared_ptr<Variable>& null()
+			{
+				static const std::shared_ptr<Variable> _null =
+					std::make_shared<Variable>("", Symbol::eof, Variable::Type::const_variable, 0, 0, string_type(), false);
+				return _null;
+			}
 
 		public:
 			Variable(const string_type &name, Symbol return_type, Type variable_type,
@@ -108,6 +114,11 @@ namespace Yradex
 					int value, const FunctionIdentifier &function, bool is_temp)
 			{
 				return std::make_shared<Variable>(name, type, Type::const_variable, 0, value, function, is_temp);
+			}
+			static std::shared_ptr<Variable>
+				new_string_variable(const string_type &name, const FunctionIdentifier &function)
+			{
+				return std::make_shared<Variable>(name, Symbol::string, Type::string, 0, 0, function, false);
 			}
 			static std::shared_ptr<Variable>
 				new_variale(const string_type &name, Symbol type,
@@ -179,6 +190,11 @@ namespace Yradex
 			bool is_temp() const
 			{
 				return _is_temp;
+			}
+
+			void set_temp(bool temp)
+			{
+				_is_temp = temp;
 			}
 
 			Type get_variable_type()

@@ -189,7 +189,7 @@ namespace Yradex
 			if (_get_last_instruction().get_operator() != PseudoOperator::ret)
 			{
 				// FIX retrun when if-else
-				_insert_instruction(PseudoInstruction(PseudoOperator::ret, _get_literal(0), Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::ret, _get_literal(0), Variable::null(), Variable::null()));
 				//_error(Error::function_not_return);
 			}
 
@@ -246,12 +246,12 @@ namespace Yradex
 			{
 				if (_get_current_function_detail()->get_return_type() == Symbol::void_symbol)
 				{
-					_insert_instruction(PseudoInstruction(PseudoOperator::ret, Variable::null, Variable::null, Variable::null));
+					_insert_instruction(PseudoInstruction(PseudoOperator::ret, Variable::null(), Variable::null(), Variable::null()));
 				}
 				else
 				{
 					// FIX return when if-else
-					_insert_instruction(PseudoInstruction(PseudoOperator::ret, _get_literal(0), Variable::null, Variable::null));
+					_insert_instruction(PseudoInstruction(PseudoOperator::ret, _get_literal(0), Variable::null(), Variable::null()));
 					//_error(Error::function_not_return);
 				}
 			}
@@ -588,7 +588,7 @@ namespace Yradex
 			}
 
 			_lexical_analyzer.next();
-			_parse_condition(do_label, Variable::null);
+			_parse_condition(do_label, Variable::null());
 
 			__check_character_and_raise_if_false(Symbol::right_parenthesis);
 			_debug("Generated do-while statement");
@@ -650,7 +650,7 @@ namespace Yradex
 				}
 				auto name = _lexical_analyzer.last().second;
 
-				PseudoInstruction pi(PseudoOperator::read, Variable::null, Variable::null, _get_variable(name));
+				PseudoInstruction pi(PseudoOperator::read, Variable::null(), Variable::null(), _get_variable(name));
 				_insert_instruction(pi);
 				_debug("Data read to identifier: " + name);
 
@@ -668,7 +668,7 @@ namespace Yradex
 		{
 			assert(_lexical_analyzer.last() == Symbol::return_symbol);
 
-			auto res = Variable::null;
+			auto res = Variable::null();
 
 			if (_lexical_analyzer.next() == Symbol::left_parenthesis)
 			{
@@ -679,14 +679,14 @@ namespace Yradex
 
 			__check_character_and_raise_if_false(Symbol::semicolon);
 
-			if (res == Variable::null)
+			if (res == Variable::null())
 			{
 				if (_get_current_function_detail()->get_return_type() != Symbol::void_symbol)
 				{
 					_error(Error::illegal_return_type);
 					return;
 				}
-				_insert_instruction(PseudoInstruction(PseudoOperator::ret, Variable::null, Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::ret, Variable::null(), Variable::null(), Variable::null()));
 			}
 			else
 			{
@@ -695,7 +695,7 @@ namespace Yradex
 					_error(Error::illegal_return_type);
 					return;
 				}
-				_insert_instruction(PseudoInstruction(PseudoOperator::ret, res, Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::ret, res, Variable::null(), Variable::null()));
 			}
 			_debug("Generated return statement");
 		}
@@ -718,7 +718,7 @@ namespace Yradex
 
 			auto else_label = _get_label();
 
-			_parse_condition(Variable::null, else_label);
+			_parse_condition(Variable::null(), else_label);
 
 			__check_character_and_raise_if_false(Symbol::right_parenthesis);
 
@@ -732,7 +732,7 @@ namespace Yradex
 			}
 
 			auto finally_label = _get_label();
-			_insert_instruction(PseudoInstruction(PseudoOperator::b, finally_label, Variable::null, Variable::null));
+			_insert_instruction(PseudoInstruction(PseudoOperator::b, Variable::null(), Variable::null(), finally_label));
 			_insert_label(else_label);
 
 			_lexical_analyzer.next();
@@ -765,14 +765,14 @@ namespace Yradex
 
 			auto init_value = _parse_expression();
 
-			_insert_instruction(PseudoInstruction(PseudoOperator::assign, init_value, Variable::null, loop_variable));
+			_insert_instruction(PseudoInstruction(PseudoOperator::assign, init_value, Variable::null(), loop_variable));
 			auto cond_label = _get_label();
 			_insert_label(cond_label);
 
 			__check_character_and_raise_if_false(Symbol::semicolon);
 
 			auto finally_label = _get_label();
-			_parse_condition(Variable::null, finally_label);
+			_parse_condition(Variable::null(), finally_label);
 
 			__check_character_and_raise_if_false(Symbol::semicolon);
 
@@ -829,7 +829,7 @@ namespace Yradex
 			_parse_statement();
 
 			_insert_instruction(loop_ins);
-			_insert_instruction(PseudoInstruction(PseudoOperator::b, cond_label, Variable::null, Variable::null));
+			_insert_instruction(PseudoInstruction(PseudoOperator::b, Variable::null(), Variable::null(), cond_label));
 			_insert_label(finally_label);
 
 			_debug("Generated for statement");
@@ -856,7 +856,7 @@ namespace Yradex
 				string_type string = _lexical_analyzer.last().second;
 				_debug("Registered string: \"" + string + "\"");
 				auto str_variable = _get_string_variable(string);
-				_insert_instruction(PseudoInstruction(PseudoOperator::print, str_variable, Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::print, str_variable, Variable::null(), Variable::null()));
 
 				if (_lexical_analyzer.next() == Symbol::right_parenthesis)
 				{
@@ -876,7 +876,7 @@ namespace Yradex
 			}
 
 			auto v = _parse_expression();
-			_insert_instruction(PseudoInstruction(PseudoOperator::print, Variable::null, v, Variable::null));
+			_insert_instruction(PseudoInstruction(PseudoOperator::print, Variable::null(), v, Variable::null()));
 			_debug("Generated printf statement");
 
 			__check_character_and_raise_if_false(Symbol::right_parenthesis);
@@ -893,11 +893,11 @@ namespace Yradex
 
 			if (!SymbolUtilities::is_compare_operator(_lexical_analyzer.last().first))
 			{
-				if (lable_true != Variable::null)
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bne, la, _get_literal(0), lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::beq, la, _get_literal(0), label_false));
 				}
@@ -913,34 +913,38 @@ namespace Yradex
 			switch (compare_operator)
 			{
 			case Symbol::equal:
-				if (lable_true != Variable::null)
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::beq, la, ra, lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bne, la, ra, label_false));
 				}
 				break;
 			case Symbol::not_equal:
-				if (lable_true != Variable::null)
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bne, la, ra, lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::beq, la, ra, label_false));
 				}
 				break;
 			case Symbol::greater:
 			{
-				res = _declear_temp_variable(Symbol::int_symbol);
-				_insert_instruction(PseudoInstruction(PseudoOperator::sub, la, ra, res));
-				if (lable_true != Variable::null)
+				res = la;
+				if (!(ra->is_const() && ra->get_value() == 0))
+				{
+					res = _declear_temp_variable(Symbol::int_symbol);
+					_insert_instruction(PseudoInstruction(PseudoOperator::sub, la, ra, res));
+				}
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bgtz, res, _get_literal(0), lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::blez, res, _get_literal(0), label_false));
 				}
@@ -948,13 +952,17 @@ namespace Yradex
 			}
 			case Symbol::less:
 			{
-				res = _declear_temp_variable(Symbol::int_symbol);
-				_insert_instruction(PseudoInstruction(PseudoOperator::sub, ra, la, res));
-				if (lable_true != Variable::null)
+				res = ra;
+				if (!(la->is_const() && la->get_value() == 0))
+				{
+					res = _declear_temp_variable(Symbol::int_symbol);
+					_insert_instruction(PseudoInstruction(PseudoOperator::sub, ra, la, res));
+				}
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bgtz, res, _get_literal(0), lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::blez, res, _get_literal(0), label_false));
 				}
@@ -962,13 +970,17 @@ namespace Yradex
 			}
 			case Symbol::greater_equal:
 			{
-				res = _declear_temp_variable(Symbol::int_symbol);
-				_insert_instruction(PseudoInstruction(PseudoOperator::sub, la, ra, res));
-				if (lable_true != Variable::null)
+				res = la;
+				if (!(ra->is_const() && ra->get_value() == 0))
+				{	
+					res = _declear_temp_variable(Symbol::int_symbol);
+					_insert_instruction(PseudoInstruction(PseudoOperator::sub, la, ra, res));
+				}
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bgez, res, _get_literal(0), lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bltz, res, _get_literal(0), label_false));
 				}
@@ -976,13 +988,17 @@ namespace Yradex
 			}
 			case Symbol::less_equal:
 			{
-				res = _declear_temp_variable(Symbol::int_symbol);
-				_insert_instruction(PseudoInstruction(PseudoOperator::sub, ra, la, res));
-				if (lable_true != Variable::null)
+				res = ra;
+				if (!(la->is_const() && la->get_value() == 0))
+				{
+					res = _declear_temp_variable(Symbol::int_symbol);
+					_insert_instruction(PseudoInstruction(PseudoOperator::sub, ra, la, res));
+				}
+				if (lable_true != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bgez, res, _get_literal(0), lable_true));
 				}
-				if (label_false != Variable::null)
+				if (label_false != Variable::null())
 				{
 					_insert_instruction(PseudoInstruction(PseudoOperator::bltz, res, _get_literal(0), label_false));
 				}
@@ -1016,13 +1032,15 @@ namespace Yradex
 				{
 					if (!_check_character_and_raise_if_false(Symbol::comma))
 					{
-						return Variable::null;
+						return Variable::null();
 					}
 					_lexical_analyzer.next();
 				}
 				need_comma = true;
 
-				arg_list.push_back(_parse_expression());
+				auto arg = _parse_expression();
+				//arg->set_temp(false);
+				arg_list.push_back(arg);
 			}
 
 			if (_get_function_detail(name) == FunctionDetail::null)
@@ -1043,18 +1061,18 @@ namespace Yradex
 
 			for (const ptr_of_variable &v : arg_list)
 			{
-				_insert_instruction(PseudoInstruction(PseudoOperator::arg, v, Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::arg, v, Variable::null(), Variable::null()));
 			}
 
 			if (_get_function_detail(name)->get_return_type() == Symbol::void_symbol)
 			{
-				_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null, Variable::null));
+				_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null(), Variable::null()));
 				_debug("Generated function call");
-				return Variable::null;
+				return Variable::null();
 			}
 
 			auto res = _declear_temp_variable(Symbol::int_symbol);
-			_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null, res));
+			_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null(), res));
 			_debug("Generated function call");
 			return res;
 		}
@@ -1068,7 +1086,7 @@ namespace Yradex
 
 			auto left_identifier = _get_variable(name);
 
-			auto index = Variable::null;
+			auto index = Variable::null();
 			if (_lexical_analyzer.last() == Symbol::left_square_brace)
 			{
 				_lexical_analyzer.next();
@@ -1086,9 +1104,9 @@ namespace Yradex
 
 			auto value = _parse_expression();
 
-			if (index == Variable::null)
+			if (index == Variable::null())
 			{
-				PseudoInstruction pi(PseudoOperator::assign, value, Variable::null, left_identifier);
+				PseudoInstruction pi(PseudoOperator::assign, value, Variable::null(), left_identifier);
 				_insert_instruction(pi);
 			}
 			else
@@ -1148,7 +1166,7 @@ namespace Yradex
 		// 后置符号: 其后的首符号
 		typename Parser::ptr_of_variable Parser::_parse_term()
 		{
-			ptr_of_variable res = Variable::null;
+			ptr_of_variable res = Variable::null();
 
 			res = _parse_factor();
 
@@ -1175,7 +1193,7 @@ namespace Yradex
 		// 后置符号: 其后的首符号
 		typename Parser::ptr_of_variable Parser::_parse_factor()
 		{
-			ptr_of_variable res = Variable::null;
+			ptr_of_variable res = Variable::null();
 
 			switch (_lexical_analyzer.last().first)
 			{
@@ -1191,7 +1209,7 @@ namespace Yradex
 
 					if (!_check_character_and_raise_if_false(Symbol::right_square_brace))
 					{
-						return Variable::null;
+						return Variable::null();
 					}
 					_lexical_analyzer.next();
 
@@ -1204,7 +1222,7 @@ namespace Yradex
 				else if (_lexical_analyzer.last() == Symbol::left_parenthesis)
 				{
 					res = _parse_function_call(name);
-					if (res == Variable::null)
+					if (res == Variable::null())
 					{
 						_error(Error::use_return_value_of_void_function);
 						res = _get_literal(1);
@@ -1234,7 +1252,7 @@ namespace Yradex
 
 				if (!_check_character_and_raise_if_false(Symbol::right_parenthesis))
 				{
-					return Variable::null;
+					return Variable::null();
 				}
 				_lexical_analyzer.next();
 				break;
@@ -1333,7 +1351,7 @@ namespace Yradex
 
 		void Parser::_insert_label(const ptr_of_variable & label)
 		{
-			_insert_instruction(PseudoInstruction(PseudoOperator::label, label, Variable::null, Variable::null));
+			_insert_instruction(PseudoInstruction(PseudoOperator::label, label, Variable::null(), Variable::null()));
 		}
 
 
@@ -1346,7 +1364,7 @@ namespace Yradex
 		typename Parser::ptr_of_variable Parser::_get_variable(const string_type & name) const
 		{
 			auto r = _pseudo_table.get_variable(name);
-			if (r == Variable::null)
+			if (r == Variable::null())
 			{
 				_error(Error::identifier_not_defined, name);
 			}

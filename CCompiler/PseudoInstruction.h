@@ -55,6 +55,51 @@ namespace Yradex
 				case PseudoOperator::call:
 				case PseudoOperator::ret:
 				case PseudoOperator::label:
+				case PseudoOperator::arg:
+					return true;
+				default:
+					break;
+				}
+				return false;
+			}
+
+			inline bool is_b_operator(PseudoOperator op)
+			{
+				switch (op)
+				{
+				case PseudoOperator::b:
+				case PseudoOperator::beq:
+				case PseudoOperator::bne:
+				case PseudoOperator::bltz:
+				case PseudoOperator::blez:
+				case PseudoOperator::bgtz:
+				case PseudoOperator::bgez:
+					return true;
+				default:
+					break;
+				}
+				return false;
+			}
+
+			inline bool has_side_effect(PseudoOperator op)
+			{
+				switch (op)
+				{
+				case PseudoOperator::b:
+				case PseudoOperator::beq:
+				case PseudoOperator::bne:
+				case PseudoOperator::bltz:
+				case PseudoOperator::blez:
+				case PseudoOperator::bgtz:
+				case PseudoOperator::bgez:
+				case PseudoOperator::read:
+				case PseudoOperator::print:
+				case PseudoOperator::call:
+				case PseudoOperator::ret:
+				case PseudoOperator::label:
+				case PseudoOperator::load:
+				case PseudoOperator::store:
+				case PseudoOperator::arg:
 					return true;
 				default:
 					break;
@@ -67,12 +112,19 @@ namespace Yradex
 		{
 			template <typename C> 
 			friend std::basic_ostream<C>& operator<<(std::basic_ostream<C> &s, const PseudoInstruction &pi);
-			
+
 		private:
 			PseudoOperator _operator_;
 			std::shared_ptr<Variable> _left_argument;
 			std::shared_ptr<Variable> _right_argument;
 			std::shared_ptr<Variable> _result;
+
+		public:
+			static const PseudoInstruction& nop()
+			{
+				static const PseudoInstruction _nop(PseudoOperator::nop, Variable::null(), Variable::null(), Variable::null());
+				return _nop;
+			}
 
 		public:
 			PseudoInstruction(PseudoOperator op, const std::shared_ptr<Variable> &a,
@@ -104,12 +156,12 @@ namespace Yradex
 			void swap(PseudoInstruction &ins);
 			void clear()
 			{
-				PseudoInstruction nop = PseudoInstruction(PseudoOperator::nop, Variable::null, Variable::null, Variable::null);
-				swap(nop);
+				*this = nop();
 			}
 
 			Error check_validation() const;
 			PseudoInstruction to_literal(PseudoTable &pseudo_table);
+			void swap_arguments();
 
 		};
 

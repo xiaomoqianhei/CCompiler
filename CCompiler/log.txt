@@ -1,0 +1,297 @@
+
+
+assign_and_expression_test
+store     $Ltr20                                  $Ltr10946                               array                                   
+store     $Ltr19                                  $Ltr6765                                array                                   
+assign    $Ltr18                                                                          i                                       
+label     $Lbl40                                                                                                                  
+bltz      i                                                                               $Lbl41                                  
+add       i                                       $Ltr2                                   $Tmp177                                 
+load      array                                   $Tmp177                                 $Tmp180                                 
+add       i                                       $Ltr1                                   $Tmp183                                 
+load      array                                   $Tmp183                                 $Tmp186                                 
+sub       $Tmp180                                 $Tmp186                                 $Tmp189                                 
+store     i                                       $Tmp189                                 array                                   
+add       i                                       $Ltr-1                                  i                                       
+b                                                                                         $Lbl40                                  
+label     $Lbl41                                                                                                                  
+load      array                                   $Ltr11                                  $Tmp193                                 
+beq       $Tmp193                                 $Ltr144                                 $Lbl42                                  
+print     $Str27                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl42                                                                                                                  
+load      array                                   $Ltr0                                   $Tmp198                                 
+beq       $Tmp198                                 $Ltr1                                   $Lbl43                                  
+print     $Str28                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl43                                                                                                                  
+load      array                                   $Ltr1                                   $Tmp208                                 
+load      array                                   $Ltr2                                   $Tmp211                                 
+load      array                                   $Ltr0                                   $Tmp214                                 
+load      array                                   $Tmp214                                 $Tmp217                                 
+mul       $Tmp217                                 $Ltr2                                   $Tmp220                                 
+load      array                                   $Tmp220                                 $Tmp223                                 
+load      array                                   $Tmp223                                 $Tmp226                                 
+add       $Ltr1                                   $Tmp208                                 $Tmp229                                 
+add       $Tmp229                                 $Tmp211                                 $Tmp232                                 
+div       $Ltr144                                 $Tmp232                                 $Tmp235                                 
+add       $Tmp235                                 $Ltr108                                 $Tmp238                                 
+sub       $Tmp238                                 $Ltr87                                  $Tmp241                                 
+sub       $Ltr0                                   $Tmp226                                 $Tmp244                                 
+mul       $Ltr3                                   $Tmp244                                 $Tmp247                                 
+add       $Tmp241                                 $Tmp247                                 t0                                      
+beq       t0                                      $Ltr51                                  $Lbl44                                  
+print     $Str29                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl44                                                                                                                  
+ret       passed_count                                                                                                            
+
+
+io_test
+assign    $Ltr6                                                                           passed_count                            
+print     $Str0                                                                                                                   
+read                                                                                      test_var                                
+beq       test_var                                $Ltr0                                   $Lbl0                                   
+print     $Str1                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl0                                                                                                                   
+print     $Str2                                                                                                                   
+read                                                                                      test_var                                
+read                                                                                      t2                                      
+read                                                                                      c3                                      
+read                                                                                      c4                                      
+read                                                                                      t5                                      
+beq       test_var                                $Ltr1                                   $Lbl1                                   
+print     $Str3                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl1                                                                                                                   
+beq       t2                                      $Ltr99999999                            $Lbl2                                   
+print     $Str4                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl2                                                                                                                   
+beq       c3                                      $Ltr103                                 $Lbl3                                   
+print     $Str5                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl3                                                                                                                   
+beq       c4                                      $Ltr78                                  $Lbl4                                   
+print     $Str6                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl4                                                                                                                   
+beq       t5                                      $Ltr-20                                 $Lbl5                                   
+print     $Str7                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl5                                                                                                                   
+ret       passed_count                                                                                                            
+
+
+add_one_until
+sub       dest                                    now                                     $Tmp274                                 
+blez      $Tmp274                                                                         $Lbl6                                   
+add       now                                     $Ltr1                                   now                                     
+arg       now                                                                                                                     
+arg       dest                                                                                                                    
+call      add_one_until                                                                   $Tmp9                                   
+ret       $Tmp9                                                                                                                   
+label     $Lbl6                                                                                                                   
+ret       now                                                                                                                     
+
+
+condition_test
+assign    $Ltr1                                                                           passed_count                            
+label     $Lbl10                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl12                                  
+label     $Lbl11                                                                                                                  
+print     $Str12                                                                                                                  
+label     $Lbl12                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl14                                  
+label     $Lbl13                                                                                                                  
+print     $Str13                                                                                                                  
+label     $Lbl14                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl16                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl18                                  
+label     $Lbl17                                                                                                                  
+print     $Str15                                                                                                                  
+label     $Lbl18                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl20                                  
+label     $Lbl19                                                                                                                  
+print     $Str16                                                                                                                  
+label     $Lbl20                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl22                                  
+label     $Lbl21                                                                                                                  
+print     $Str17                                                                                                                  
+label     $Lbl22                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl24                                  
+label     $Lbl23                                                                                                                  
+print     $Str18                                                                                                                  
+label     $Lbl24                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl26                                  
+label     $Lbl25                                                                                                                  
+print     $Str19                                                                                                                  
+label     $Lbl26                                                                                                                  
+add       passed_count                            $Ltr1                                   passed_count                            
+b                                                                                         $Lbl28                                  
+label     $Lbl27                                                                                                                  
+print     $Str20                                                                                                                  
+label     $Lbl28                                                                                                                  
+beq       passed_count                            $Ltr10                                  $Lbl29                                  
+print     $Str21                                                                                                                  
+label     $Lbl29                                                                                                                  
+ret       passed_count                                                                                                            
+
+
+function_call_test
+assign    $Ltr2                                                                           passed_count                            
+assign    $Ltr0                                                                           test_var                                
+arg       $Ltr0                                                                                                                   
+arg       seed                                                                                                                    
+call      add_one_until                                                                   $Tmp10                                  
+beq       $Tmp10                                  seed                                    $Lbl7                                   
+print     $Str8                                                                                                                   
+print                                             seed                                                                            
+print     $Str9                                                                                                                   
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl7                                                                                                                   
+beq       test_var                                $Ltr0                                   $Lbl8                                   
+print     $Str10                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl8                                                                                                                   
+ret       passed_count                                                                                                            
+
+
+do_while_loop_test
+assign    $Ltr1                                                                           passed_count                            
+assign    $Ltr0                                                                           i                                       
+assign    $Ltr0                                                                           test_var                                
+label     $Lbl30                                                                                                                  
+add       i                                       $Ltr1                                   i                                       
+add       test_var                                i                                       test_var                                
+sub       seed                                    i                                       $Tmp329                                 
+bgtz      $Tmp329                                                                         $Lbl30                                  
+add       $Ltr1                                   seed                                    $Tmp332                                 
+mul       $Tmp332                                 seed                                    $Tmp335                                 
+div       $Tmp335                                 $Ltr2                                   $Tmp338                                 
+beq       test_var                                $Tmp338                                 $Lbl31                                  
+print     $Str22                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl31                                                                                                                  
+ret       passed_count                                                                                                            
+
+
+for_loop_test
+assign    $Ltr2                                                                           passed_count                            
+assign    $Ltr0                                                                           test_var                                
+assign    $Ltr0                                                                           i                                       
+label     $Lbl32                                                                                                                  
+add       seed                                    $Ltr1                                   $Tmp346                                 
+sub       $Tmp346                                 i                                       $Tmp349                                 
+blez      $Tmp349                                                                         $Lbl33                                  
+add       test_var                                i                                       test_var                                
+add       i                                       $Ltr1                                   i                                       
+b                                                                                         $Lbl32                                  
+label     $Lbl33                                                                                                                  
+add       $Ltr1                                   seed                                    $Tmp355                                 
+mul       $Tmp355                                 seed                                    $Tmp358                                 
+div       $Tmp358                                 $Ltr2                                   $Tmp361                                 
+beq       test_var                                $Tmp361                                 $Lbl34                                  
+print     $Str23                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl34                                                                                                                  
+assign    $Ltr0                                                                           test_var                                
+assign    seed                                                                            i                                       
+label     $Lbl35                                                                                                                  
+beq       i                                       $Ltr0                                   $Lbl36                                  
+add       test_var                                i                                       test_var                                
+add       i                                       $Ltr-1                                  i                                       
+b                                                                                         $Lbl35                                  
+label     $Lbl36                                                                                                                  
+add       $Ltr1                                   seed                                    $Tmp371                                 
+mul       $Tmp371                                 seed                                    $Tmp374                                 
+div       $Tmp374                                 $Ltr2                                   $Tmp377                                 
+beq       test_var                                $Tmp377                                 $Lbl37                                  
+print     $Str24                                                                                                                  
+sub       passed_count                            $Ltr1                                   passed_count                            
+label     $Lbl37                                                                                                                  
+ret       passed_count                                                                                                            
+
+
+init_array
+store     $Ltr0                                   $Ltr-1                                  array                                   
+store     $Ltr1                                   $Ltr0                                   array                                   
+store     $Ltr2                                   $Ltr1                                   array                                   
+ret                                                                                                                               
+
+
+swap_items_in_array
+assign    $Ltr0                                                                           i                                       
+label     $Lbl45                                                                                                                  
+sub       $Ltr2                                   i                                       $Tmp383                                 
+blez      $Tmp383                                                                         $Lbl46                                  
+assign    i                                                                               $Tmp386                                 
+add       i                                       $Ltr1                                   i                                       
+load      array                                   i                                       $Tmp388                                 
+store     $Tmp386                                 $Tmp388                                 array                                   
+b                                                                                         $Lbl45                                  
+label     $Lbl46                                                                                                                  
+ret                                                                                                                               
+
+
+calculate_fibonacci
+label     $Lbl47                                                                                                                  
+call      swap_items_in_array                                                                                                     
+load      array                                   $Ltr0                                   $Tmp391                                 
+load      array                                   $Ltr1                                   $Tmp394                                 
+add       $Tmp391                                 $Tmp394                                 $Tmp397                                 
+store     $Ltr2                                   $Tmp397                                 array                                   
+load      array                                   $Ltr2                                   $Tmp400                                 
+sub       max_num                                 $Tmp400                                 $Tmp403                                 
+bgez      $Tmp403                                                                         $Lbl47                                  
+ret                                                                                                                               
+
+
+try_fibonacci
+call      init_array                                                                                                              
+arg       max_num                                                                                                                 
+call      calculate_fibonacci                                                                                                     
+load      array                                   $Ltr2                                   $Tmp406                                 
+beq       $Tmp406                                 $Ltr14930352                            $Lbl48                                  
+print     $Str30                                                                                                                  
+ret       $Ltr0                                                                                                                   
+label     $Lbl48                                                                                                                  
+ret       $Ltr1                                                                                                                   
+
+
+main
+assign    $Ltr0                                                                           passed_count                            
+call      io_test                                                                         $Tmp123                                 
+add       passed_count                            $Tmp123                                 passed_count                            
+print     $Str31                                                                                                                  
+read                                                                                      seed                                    
+arg       seed                                                                                                                    
+call      function_call_test                                                              $Tmp125                                 
+add       passed_count                            $Tmp125                                 passed_count                            
+call      condition_test                                                                  $Tmp127                                 
+add       passed_count                            $Tmp127                                 passed_count                            
+arg       seed                                                                                                                    
+call      do_while_loop_test                                                              $Tmp129                                 
+add       passed_count                            $Tmp129                                 passed_count                            
+arg       seed                                                                                                                    
+call      for_loop_test                                                                   $Tmp131                                 
+add       passed_count                            $Tmp131                                 passed_count                            
+call      assign_and_expression_test                                                      $Tmp133                                 
+add       passed_count                            $Tmp133                                 passed_count                            
+call      try_fibonacci                                                                   $Tmp135                                 
+print     $Str32                                                                                                                  
+add       passed_count                            $Tmp135                                 passed_count                            
+print                                             passed_count                                                                    
+print     $Str33                                                                                                                  
+print                                             $Ltr27                                                                          
+print     $Str34                                                                                                                  
+ret                                                                                                                               

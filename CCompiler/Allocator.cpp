@@ -11,14 +11,14 @@ namespace Yradex
 			case MemoryPool::leaf:
 				for (int i = 8; i < 28; ++i)
 				{
-					_register_pool.insert(std::make_pair(i, Variable::null));
+					_register_pool.insert(std::make_pair(i, Variable::null()));
 				}
 				_max_used = 7;
 				break;
 			case MemoryPool::default_:
 				for (int i = 16; i < 24; ++i)
 				{
-					_register_pool.insert(std::make_pair(i, Variable::null));
+					_register_pool.insert(std::make_pair(i, Variable::null()));
 				}
 				break;
 			default:
@@ -37,7 +37,7 @@ namespace Yradex
 		VariableAddress MemoryPool::push(const std::shared_ptr<Variable> &v)
 		{
 			auto iter = std::find_if(_register_pool.begin(), _register_pool.end(),
-				[](const std::pair<int, std::shared_ptr<Variable>> &p) {return p.second == Variable::null; }
+				[](const std::pair<int, std::shared_ptr<Variable>> &p) {return p.second == Variable::null(); }
 			);
 
 			if (iter == _register_pool.end())
@@ -67,7 +67,7 @@ namespace Yradex
 				[&v](const std::pair<int, std::shared_ptr<Variable>> &p) {return p.second == v; }
 			);
 
-			iter->second = Variable::null;
+			iter->second = Variable::null();
 		}
 		bool MemoryPool::is_in_register(const std::shared_ptr<Variable>& v)
 		{
@@ -106,21 +106,25 @@ namespace Yradex
 			// allocate for temps
 			for (const auto &ins : table.get_current_instruction_list())
 			{
-				if (ins.get_left_argument() != Variable::null)
-				{
-					if (ins.get_left_argument()->get_variable_type() == Variable::Type::variable && ins.get_left_argument()->is_temp())
-					{
-						memory_pool.pop_register(ins.get_left_argument());
-					}
-				}
-				if (ins.get_right_argument() != Variable::null)
-				{
-					if (ins.get_right_argument()->get_variable_type() == Variable::Type::variable && ins.get_right_argument()->is_temp())
-					{
-						memory_pool.pop_register(ins.get_right_argument());
-					}
-				}
-				if (ins.get_result() != Variable::null)
+				// TODO
+
+				//if (ins.get_left_argument() != Variable::null())
+				//{
+				//	if (ins.get_left_argument()->get_variable_type() == Variable::Type::variable 
+				//		&& ins.get_left_argument()->is_temp())
+				//	{
+				//		memory_pool.pop_register(ins.get_left_argument());
+				//	}
+				//}
+				//if (ins.get_right_argument() != Variable::null())
+				//{
+				//	if (ins.get_right_argument()->get_variable_type() == Variable::Type::variable 
+				//		&& ins.get_right_argument()->is_temp())
+				//	{
+				//		memory_pool.pop_register(ins.get_right_argument());
+				//	}
+				//}
+				if (ins.get_result() != Variable::null())
 				{
 					if (ins.get_result()->get_variable_type() == Variable::Type::variable && ins.get_result()->is_temp())
 					{
@@ -133,7 +137,7 @@ namespace Yradex
 			auto variable_set = table.get_variable_set();
 			for (auto &v : variable_set)
 			{
-				if (v != Variable::null && !v->is_temp())
+				if (v != Variable::null() && !v->is_temp())
 				{
 					switch (v->get_variable_type())
 					{

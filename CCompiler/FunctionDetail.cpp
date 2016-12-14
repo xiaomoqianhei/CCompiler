@@ -27,7 +27,7 @@ namespace Yradex
 			{
 				return *iter;
 			}
-			return Variable::null;
+			return Variable::null();
 		}
 		std::vector<std::shared_ptr<Variable>>& FunctionDetail::get_parameter_list()
 		{

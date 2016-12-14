@@ -27,13 +27,12 @@ namespace Yradex
 			void _generate_data();
 			void _generate_text();
 			void _generate_function();
-			void _generate_instruction(PseudoInstruction &ins);
-			void _rearrange_instruction(PseudoInstruction &ins);
+			void _generate_instruction(const PseudoInstruction &ins);
 
 			void _try_save_argument_register();
 
-			string_type _get_argument_1(PseudoInstruction &ins);
-			string_type _get_argument_2(PseudoInstruction &ins);
+			string_type _get_argument_1(const PseudoInstruction &ins);
+			string_type _get_argument_2(const PseudoInstruction &ins);
 
 			//template<typename T>
 			void _print_instruction(MipsOperator op)

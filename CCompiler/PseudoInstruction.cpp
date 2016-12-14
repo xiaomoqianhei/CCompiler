@@ -6,6 +6,7 @@ namespace Yradex
 {
 	namespace CCompiler
 	{
+
 		PseudoInstruction::PseudoInstruction(PseudoOperator op, const std::shared_ptr<Variable>& a, const std::shared_ptr<Variable>& b, const std::shared_ptr<Variable>& res)
 			:_operator_(op), _left_argument(a), _right_argument(b), _result(res)
 		{
@@ -65,17 +66,23 @@ namespace Yradex
 		{
 			PseudoInstruction new_ins(*this);
 
-			if (_left_argument->get_variable_type() == Variable::Type::const_variable)
+			if (_left_argument != Variable::null() && _left_argument->get_variable_type() == Variable::Type::const_variable
+				&& _right_argument->get_type() == Symbol::int_symbol)
 			{
 				_left_argument = pseudo_table.get_literal(_left_argument->get_value());
 			}
 
-			if (_right_argument->get_variable_type() == Variable::Type::const_variable)
+			if (_right_argument != Variable::null() && _right_argument->get_variable_type() == Variable::Type::const_variable
+				&& _right_argument->get_type() == Symbol::int_symbol)
 			{
 				_right_argument = pseudo_table.get_literal(_right_argument->get_value());
 			}
 
 			return new_ins;
+		}
+		void PseudoInstruction::swap_arguments()
+		{
+			_left_argument.swap(_right_argument);
 		}
 	}
 }
