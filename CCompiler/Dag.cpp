@@ -394,7 +394,7 @@ namespace Yradex
 
 					if (iter == _variable_map.cend())
 					{
-						result = _pseudo_table.declear_temp_variable(Symbol::int_symbol);
+						result = _pseudo_table.declear_temp_variable(node.result->get_type());
 					}
 					else
 					{

@@ -328,7 +328,7 @@ namespace Yradex
 					{
 						_print_instruction(MipsOperator::sw, "$a0", "($sp)");			// store a0
 						_print_instruction(MipsOperator::add, "$a0", "$zero", a2);	// load a0
-						if (ins.get_right_argument()->get_type() == Symbol::int_symbol)
+						if (ins.get_result()->get_value() == 0)		// var is int
 						{
 							_print_instruction(MipsOperator::add, "$v0", "$zero", "1");		// syscall
 						}
@@ -342,7 +342,7 @@ namespace Yradex
 					else
 					{
 						_print_instruction(MipsOperator::add, "$a0", "$zero", a2);	// load a0
-						if (ins.get_right_argument()->get_type() == Symbol::int_symbol)
+						if (ins.get_result()->get_value() == 0)		// var is int
 						{
 							_print_instruction(MipsOperator::add, "$v0", "$zero", "1");		// syscall
 						}

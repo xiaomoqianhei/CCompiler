@@ -876,7 +876,12 @@ namespace Yradex
 			}
 
 			auto v = _parse_expression();
-			_insert_instruction(PseudoInstruction(PseudoOperator::print, Variable::null(), v, Variable::null()));
+			auto type = _get_literal(0);
+			if (v->get_type() == Symbol::char_symbol)
+			{
+				type = _get_literal(1);
+			}
+			_insert_instruction(PseudoInstruction(PseudoOperator::print, Variable::null(), v, type));
 			_debug("Generated printf statement");
 
 			__check_character_and_raise_if_false(Symbol::right_parenthesis);
