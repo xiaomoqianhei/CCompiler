@@ -298,6 +298,11 @@ namespace Yradex
 			}
 		};
 
+		inline bool operator==(const std::shared_ptr<Variable> &l, const std::shared_ptr<Variable> &r)
+		{
+			return *l == *r;
+		}
+
 		template <typename C>
 		std::basic_ostream<C>& operator<<(std::basic_ostream<C>& s, const Variable &v)
 		{

@@ -135,7 +135,7 @@ namespace Yradex
 
 		class PseudoInstruction
 		{
-			template <typename C> 
+			template <typename C>
 			friend std::basic_ostream<C>& operator<<(std::basic_ostream<C> &s, const PseudoInstruction &pi);
 
 		private:
@@ -158,6 +158,7 @@ namespace Yradex
 			PseudoInstruction& operator=(PseudoInstruction ins)
 			{
 				swap(ins);
+				return *this;
 			}
 			~PseudoInstruction();
 
