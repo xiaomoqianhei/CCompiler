@@ -1,45 +1,46 @@
 
 
 assign_and_expression_test
+assign    $Ltr5                                                                           passed_count                            
 store     $Ltr20                                  $Ltr10946                               array                                   
 store     $Ltr19                                  $Ltr6765                                array                                   
 assign    $Ltr18                                                                          i                                       
 label     $Lbl40                                                                                                                  
 bltz      i                                                                               $Lbl41                                  
-add       i                                       $Ltr2                                   $Tmp177                                 
-load      array                                   $Tmp177                                 $Tmp180                                 
-add       i                                       $Ltr1                                   $Tmp183                                 
-load      array                                   $Tmp183                                 $Tmp186                                 
-sub       $Tmp180                                 $Tmp186                                 $Tmp189                                 
-store     i                                       $Tmp189                                 array                                   
+add       i                                       $Ltr2                                   $Tmp255                                 
+load      array                                   $Tmp255                                 $Tmp258                                 
+add       i                                       $Ltr1                                   $Tmp261                                 
+load      array                                   $Tmp261                                 $Tmp264                                 
+sub       $Tmp258                                 $Tmp264                                 $Tmp267                                 
+store     i                                       $Tmp267                                 array                                   
 add       i                                       $Ltr-1                                  i                                       
 b                                                                                         $Lbl40                                  
 label     $Lbl41                                                                                                                  
-load      array                                   $Ltr11                                  $Tmp193                                 
-beq       $Tmp193                                 $Ltr144                                 $Lbl42                                  
+load      array                                   $Ltr11                                  $Tmp271                                 
+beq       $Tmp271                                 $Ltr144                                 $Lbl42                                  
 print     $Str27                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
 label     $Lbl42                                                                                                                  
-load      array                                   $Ltr0                                   $Tmp198                                 
-beq       $Tmp198                                 $Ltr1                                   $Lbl43                                  
+load      array                                   $Ltr0                                   $Tmp276                                 
+beq       $Tmp276                                 $Ltr1                                   $Lbl43                                  
 print     $Str28                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
 label     $Lbl43                                                                                                                  
-load      array                                   $Ltr1                                   $Tmp208                                 
-load      array                                   $Ltr2                                   $Tmp211                                 
-load      array                                   $Ltr0                                   $Tmp214                                 
-load      array                                   $Tmp214                                 $Tmp217                                 
-mul       $Tmp217                                 $Ltr2                                   $Tmp220                                 
-load      array                                   $Tmp220                                 $Tmp223                                 
-load      array                                   $Tmp223                                 $Tmp226                                 
-add       $Ltr1                                   $Tmp208                                 $Tmp229                                 
-add       $Tmp229                                 $Tmp211                                 $Tmp232                                 
-div       $Ltr144                                 $Tmp232                                 $Tmp235                                 
-add       $Tmp235                                 $Ltr108                                 $Tmp238                                 
-sub       $Tmp238                                 $Ltr87                                  $Tmp241                                 
-sub       $Ltr0                                   $Tmp226                                 $Tmp244                                 
-mul       $Ltr3                                   $Tmp244                                 $Tmp247                                 
-add       $Tmp241                                 $Tmp247                                 t0                                      
+load      array                                   $Ltr1                                   $Tmp286                                 
+load      array                                   $Ltr2                                   $Tmp289                                 
+load      array                                   $Ltr0                                   $Tmp292                                 
+load      array                                   $Tmp292                                 $Tmp295                                 
+mul       $Tmp295                                 $Ltr2                                   $Tmp298                                 
+load      array                                   $Tmp298                                 $Tmp301                                 
+load      array                                   $Tmp301                                 $Tmp304                                 
+add       $Ltr1                                   $Tmp286                                 $Tmp307                                 
+add       $Tmp307                                 $Tmp289                                 $Tmp310                                 
+div       $Ltr144                                 $Tmp310                                 $Tmp313                                 
+add       $Tmp313                                 $Ltr108                                 $Tmp316                                 
+sub       $Tmp316                                 $Ltr87                                  $Tmp319                                 
+sub       $Ltr0                                   $Tmp304                                 $Tmp322                                 
+mul       $Ltr3                                   $Tmp322                                 $Tmp325                                 
+add       $Tmp319                                 $Tmp325                                 t0                                      
 beq       t0                                      $Ltr51                                  $Lbl44                                  
 print     $Str29                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
@@ -85,8 +86,8 @@ ret       passed_count
 
 
 add_one_until
-sub       dest                                    now                                     $Tmp274                                 
-blez      $Tmp274                                                                         $Lbl6                                   
+sub       dest                                    now                                     $Tmp352                                 
+blez      $Tmp352                                                                         $Lbl6                                   
 add       now                                     $Ltr1                                   now                                     
 arg       now                                                                                                                     
 arg       dest                                                                                                                    
@@ -173,12 +174,12 @@ assign    $Ltr0                                                                 
 label     $Lbl30                                                                                                                  
 add       i                                       $Ltr1                                   i                                       
 add       test_var                                i                                       test_var                                
-sub       seed                                    i                                       $Tmp329                                 
-bgtz      $Tmp329                                                                         $Lbl30                                  
-add       $Ltr1                                   seed                                    $Tmp332                                 
-mul       $Tmp332                                 seed                                    $Tmp335                                 
-div       $Tmp335                                 $Ltr2                                   $Tmp338                                 
-beq       test_var                                $Tmp338                                 $Lbl31                                  
+sub       seed                                    i                                       $Tmp411                                 
+bgtz      $Tmp411                                                                         $Lbl30                                  
+add       $Ltr1                                   seed                                    $Tmp414                                 
+mul       $Tmp414                                 seed                                    $Tmp417                                 
+div       $Tmp417                                 $Ltr2                                   $Tmp420                                 
+beq       test_var                                $Tmp420                                 $Lbl31                                  
 print     $Str22                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
 label     $Lbl31                                                                                                                  
@@ -190,17 +191,17 @@ assign    $Ltr2                                                                 
 assign    $Ltr0                                                                           test_var                                
 assign    $Ltr0                                                                           i                                       
 label     $Lbl32                                                                                                                  
-add       seed                                    $Ltr1                                   $Tmp346                                 
-sub       $Tmp346                                 i                                       $Tmp349                                 
-blez      $Tmp349                                                                         $Lbl33                                  
+add       seed                                    $Ltr1                                   $Tmp428                                 
+sub       $Tmp428                                 i                                       $Tmp431                                 
+blez      $Tmp431                                                                         $Lbl33                                  
 add       test_var                                i                                       test_var                                
 add       i                                       $Ltr1                                   i                                       
 b                                                                                         $Lbl32                                  
 label     $Lbl33                                                                                                                  
-add       $Ltr1                                   seed                                    $Tmp355                                 
-mul       $Tmp355                                 seed                                    $Tmp358                                 
-div       $Tmp358                                 $Ltr2                                   $Tmp361                                 
-beq       test_var                                $Tmp361                                 $Lbl34                                  
+add       $Ltr1                                   seed                                    $Tmp437                                 
+mul       $Tmp437                                 seed                                    $Tmp440                                 
+div       $Tmp440                                 $Ltr2                                   $Tmp443                                 
+beq       test_var                                $Tmp443                                 $Lbl34                                  
 print     $Str23                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
 label     $Lbl34                                                                                                                  
@@ -212,10 +213,10 @@ add       test_var                                i                             
 add       i                                       $Ltr-1                                  i                                       
 b                                                                                         $Lbl35                                  
 label     $Lbl36                                                                                                                  
-add       $Ltr1                                   seed                                    $Tmp371                                 
-mul       $Tmp371                                 seed                                    $Tmp374                                 
-div       $Tmp374                                 $Ltr2                                   $Tmp377                                 
-beq       test_var                                $Tmp377                                 $Lbl37                                  
+add       $Ltr1                                   seed                                    $Tmp453                                 
+mul       $Tmp453                                 seed                                    $Tmp456                                 
+div       $Tmp456                                 $Ltr2                                   $Tmp459                                 
+beq       test_var                                $Tmp459                                 $Lbl37                                  
 print     $Str24                                                                                                                  
 sub       passed_count                            $Ltr1                                   passed_count                            
 label     $Lbl37                                                                                                                  
@@ -232,12 +233,12 @@ ret
 swap_items_in_array
 assign    $Ltr0                                                                           i                                       
 label     $Lbl45                                                                                                                  
-sub       $Ltr2                                   i                                       $Tmp383                                 
-blez      $Tmp383                                                                         $Lbl46                                  
-assign    i                                                                               $Tmp386                                 
+sub       $Ltr2                                   i                                       $Tmp465                                 
+blez      $Tmp465                                                                         $Lbl46                                  
+assign    i                                                                               $Tmp468                                 
 add       i                                       $Ltr1                                   i                                       
-load      array                                   i                                       $Tmp388                                 
-store     $Tmp386                                 $Tmp388                                 array                                   
+load      array                                   i                                       $Tmp470                                 
+store     $Tmp468                                 $Tmp470                                 array                                   
 b                                                                                         $Lbl45                                  
 label     $Lbl46                                                                                                                  
 ret                                                                                                                               
@@ -246,13 +247,13 @@ ret
 calculate_fibonacci
 label     $Lbl47                                                                                                                  
 call      swap_items_in_array                                                                                                     
-load      array                                   $Ltr0                                   $Tmp391                                 
-load      array                                   $Ltr1                                   $Tmp394                                 
-add       $Tmp391                                 $Tmp394                                 $Tmp397                                 
-store     $Ltr2                                   $Tmp397                                 array                                   
-load      array                                   $Ltr2                                   $Tmp400                                 
-sub       max_num                                 $Tmp400                                 $Tmp403                                 
-bgez      $Tmp403                                                                         $Lbl47                                  
+load      array                                   $Ltr0                                   $Tmp473                                 
+load      array                                   $Ltr1                                   $Tmp476                                 
+add       $Tmp473                                 $Tmp476                                 $Tmp479                                 
+store     $Ltr2                                   $Tmp479                                 array                                   
+load      array                                   $Ltr2                                   $Tmp482                                 
+sub       max_num                                 $Tmp482                                 $Tmp485                                 
+bgez      $Tmp485                                                                         $Lbl47                                  
 ret                                                                                                                               
 
 
@@ -260,8 +261,8 @@ try_fibonacci
 call      init_array                                                                                                              
 arg       max_num                                                                                                                 
 call      calculate_fibonacci                                                                                                     
-load      array                                   $Ltr2                                   $Tmp406                                 
-beq       $Tmp406                                 $Ltr14930352                            $Lbl48                                  
+load      array                                   $Ltr2                                   $Tmp488                                 
+beq       $Tmp488                                 $Ltr14930352                            $Lbl48                                  
 print     $Str30                                                                                                                  
 ret       $Ltr0                                                                                                                   
 label     $Lbl48                                                                                                                  

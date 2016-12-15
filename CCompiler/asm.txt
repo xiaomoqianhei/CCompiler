@@ -170,6 +170,8 @@ assign_and_expression_test:
 		sw		$s6,		-36($fp)
 		sw		$s7,		-40($fp)
 		add		$sp,		$sp,		-144
+		add		$v0,		$zero,		5
+		sw		$v0,		-48($fp)
 		add		$v0,		$zero,		-56
 		add		$v0,		$v0,		$fp
 		add		$v1,		$zero,		10946

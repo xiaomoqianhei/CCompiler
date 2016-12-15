@@ -285,7 +285,8 @@ namespace Yradex
 				for (auto iter = list.begin(); iter != list.end();)
 				{
 					if ((!PseudoOperatorUtility::has_side_effect(iter->get_operator()))
-						&& iter->get_result()->get_ref() == 1)
+						&& iter->get_result()->get_ref() == 1
+						&& iter->get_result()->get_function() != FunctionIdentifier::global)
 					{
 						iter = list.erase(iter);
 					}
@@ -569,6 +570,8 @@ namespace Yradex
 				if (PseudoOperatorUtility::is_end_of_basic_block(ins.get_operator()) && operator_id != -1)
 				{
 					++iter;
+					auto node_vector_backup = _node_vector;
+
 					std::list<PseudoInstruction> temp_list;
 					_generate_code_from_map(temp_list);
 
@@ -582,6 +585,7 @@ namespace Yradex
 						{
 							++iter;
 							temp_list.clear();
+							_node_vector = node_vector_backup;
 							_node_vector.pop_back();
 							continue;
 						}
