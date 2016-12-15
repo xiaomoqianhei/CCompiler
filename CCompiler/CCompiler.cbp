@@ -52,6 +52,8 @@
 		<Unit filename="Allocator.h" />
 		<Unit filename="BasicErrorHandler.cpp" />
 		<Unit filename="BasicErrorHandler.h" />
+		<Unit filename="Dag.cpp" />
+		<Unit filename="Dag.h" />
 		<Unit filename="Error.cpp" />
 		<Unit filename="Error.h" />
 		<Unit filename="FunctionDetail.cpp" />
@@ -62,6 +64,8 @@
 		<Unit filename="Generator.h" />
 		<Unit filename="LexicalAnalyzer.cpp" />
 		<Unit filename="LexicalAnalyzer.h" />
+		<Unit filename="MipsOperator.cpp" />
+		<Unit filename="MipsOperator.h" />
 		<Unit filename="Optimizer.cpp" />
 		<Unit filename="Optimizer.h" />
 		<Unit filename="Parser.cpp" />

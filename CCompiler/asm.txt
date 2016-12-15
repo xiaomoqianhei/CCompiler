@@ -487,8 +487,8 @@ for_loop_test:
 		sw		$s2,		-24($fp)
 		add		$sp,		$sp,		-28
 		add		$s2,		$zero,		2
-		add		$s0,		$zero,		0
 		add		$s1,		$zero,		0
+		add		$s0,		$zero,		0
 $Lbl32:
 		add		$t0,		$a0,		1
 		sub		$t1,		$t0,		$s0

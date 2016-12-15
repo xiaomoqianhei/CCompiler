@@ -141,8 +141,8 @@ ret       passed_count
 
 for_loop_test
 assign    $Ltr2                                                                           passed_count                            
-assign    $Ltr0                                                                           i                                       
 assign    $Ltr0                                                                           test_var                                
+assign    $Ltr0                                                                           i                                       
 label     $Lbl32                                                                                                                  
 add       seed                                    $Ltr1                                   $Tmp336                                 
 sub       $Tmp336                                 i                                       $Tmp339                                 

@@ -19,7 +19,7 @@
 	<iomanip>
 	<functional>
 
-1480232739 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symbol.h
+1481545780 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symbol.h
 	"Utility.h"
 	<iostream>
 	<unordered_map>
@@ -38,16 +38,16 @@
 1478587532 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\standarderrorhandler.cpp
 	"StandardErrorHandler.h"
 
-1480182200 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\utility.h
+1481719296 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\utility.h
 	<cassert>
 	<string>
 
 1478514770 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symbol.cpp
 
-1480232496 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\basicerrorhandler.cpp
+1481726823 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\basicerrorhandler.cpp
 	"BasicErrorHandler.h"
 
-1480232660 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\basicerrorhandler.h
+1481726782 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\basicerrorhandler.h
 	"Utility.h"
 	"Error.h"
 	<string>
@@ -56,7 +56,7 @@
 	<unordered_map>
 	<algorithm>
 
-1479627614 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\error.h
+1481640679 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\error.h
 	"Utility.h"
 	<iostream>
 	<unordered_map>
@@ -69,14 +69,14 @@
 1480240754 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.cpp
 	"Parser.h"
 
-1480240721 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.cpp
+1481704133 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.cpp
 	"Allocator.h"
 
 1480240696 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.h
 	"PseudoTable.h"
 	<map>
 
-1480172114 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.h
+1481767997 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.h
 	"Utility.h"
 	"PseudoInstruction.h"
 	"BasicErrorHandler.h"
@@ -84,12 +84,14 @@
 	<list>
 	<unordered_map>
 
-1480078299 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
+1481769438 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
 	"Utility.h"
 	"Variable.h"
+	"Error.h"
+	"SymbolTable.h"
 	<iomanip>
 
-1480174006 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
+1481720530 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
 	"Utility.h"
 	"Symbol.h"
 	"FunctionIdentifier.h"
@@ -101,7 +103,7 @@
 	<vector>
 	<memory>
 
-1480172104 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symboltable.h
+1481708940 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symboltable.h
 	"Symbol.h"
 	"Variable.h"
 	"FunctionDetail.h"

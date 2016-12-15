@@ -276,7 +276,15 @@ namespace Yradex
 
 			if (PseudoOperatorUtility::writes_result_in_basic_block(_node_vector[operator_id].operator_))
 			{
-				_variable_map.insert_or_assign(result, operator_id);
+				auto iter = _variable_map.find(result);
+				if (iter == _variable_map.cend())
+				{
+					_variable_map.insert(std::make_pair(result, operator_id));
+				}
+				else
+				{
+					_variable_map.at(result) = operator_id;
+				}
 			}
 		}
 		void Dag::_remove_useless_instructions(std::list<PseudoInstruction>& list)
@@ -294,7 +302,7 @@ namespace Yradex
 							&& iter->get_result()->get_function() != FunctionIdentifier::global)
 					||
 						// useless label
-						(iter->get_operator() == PseudoOperator::label 
+						(iter->get_operator() == PseudoOperator::label
 							&& iter->get_left_argument()->get_ref() == 1)
 					)
 					{
@@ -591,7 +599,7 @@ namespace Yradex
 					auto &last_node = _node_vector[operator_id];
 					if (last_node.operator_ == PseudoOperator::b)
 					{
-						while (iter->get_operator() != PseudoOperator::label 
+						while (iter->get_operator() != PseudoOperator::label
 							|| iter->get_left_argument()->get_ref() == 1)
 						{
 							if (std::next(iter) == original_ins_list.end())
@@ -614,7 +622,7 @@ namespace Yradex
 
 					last_iter = iter;
 					_generate_code_from_map(new_ins_list);
-					
+
 					_variable_map.clear();
 					_node_vector.clear();
 				}
@@ -622,7 +630,7 @@ namespace Yradex
 
 			original_ins_list.clear();
 			_remove_useless_instructions(new_ins_list);
-			
+
 			// TEST
 			std::ofstream stream("log.txt", std::ios::app);
 
