@@ -281,15 +281,22 @@ namespace Yradex
 		}
 		void Dag::_remove_useless_instructions(std::list<PseudoInstruction>& list)
 		{
-			int this_count = list.size();
-			int last_count = 0;
-			while (this_count != last_count)
+			int ins_count_now = list.size();
+			int ins_count_last = 0;
+			while (ins_count_now != ins_count_last)
 			{
 				for (auto iter = list.begin(); iter != list.end();)
 				{
-					if ((!PseudoOperatorUtility::has_side_effect(iter->get_operator()))
-						&& iter->get_result()->get_ref() == 1
-						&& iter->get_result()->get_function() != FunctionIdentifier::global)
+					if (
+						// useless assign
+						((!PseudoOperatorUtility::has_side_effect(iter->get_operator()))
+							&& iter->get_result()->get_ref() == 1
+							&& iter->get_result()->get_function() != FunctionIdentifier::global)
+					||
+						// useless label
+						(iter->get_operator() == PseudoOperator::label 
+							&& iter->get_left_argument()->get_ref() == 1)
+					)
 					{
 						iter = list.erase(iter);
 					}
@@ -298,8 +305,8 @@ namespace Yradex
 						++iter;
 					}
 				}
-				last_count = this_count;
-				this_count = list.size();
+				ins_count_last = ins_count_now;
+				ins_count_now = list.size();
 			}
 		}
 		void Dag::_generate_code_from_map(std::list<PseudoInstruction>& list)
@@ -556,6 +563,7 @@ namespace Yradex
 			auto last_iter = original_ins_list.begin();
 			for (auto iter = original_ins_list.begin(); iter != original_ins_list.end();)
 			{
+			next_instr:
 				auto &ins = *iter;
 
 				// pre-check
@@ -583,8 +591,14 @@ namespace Yradex
 					auto &last_node = _node_vector[operator_id];
 					if (last_node.operator_ == PseudoOperator::b)
 					{
-						while (iter->get_operator() != PseudoOperator::label || iter->get_left_argument()->get_ref() == 1)
+						while (iter->get_operator() != PseudoOperator::label 
+							|| iter->get_left_argument()->get_ref() == 1)
 						{
+							if (std::next(iter) == original_ins_list.end())
+							{
+								// at the end of instr list. write return instr.
+								goto next_instr;
+							}
 							iter = original_ins_list.erase(iter);
 						}
 						if (last_node.result == iter->get_left_argument())
