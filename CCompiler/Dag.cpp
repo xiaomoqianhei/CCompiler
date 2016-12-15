@@ -274,7 +274,10 @@ namespace Yradex
 
 			_node_vector[operator_id].result = result;
 
-			_variable_map.insert_or_assign(result, operator_id);
+			if (PseudoOperatorUtility::writes_result_in_basic_block(_node_vector[operator_id].operator_))
+			{
+				_variable_map.insert_or_assign(result, operator_id);
+			}
 		}
 		void Dag::_remove_useless_instructions(std::list<PseudoInstruction>& list)
 		{
@@ -367,9 +370,7 @@ namespace Yradex
 				// get result
 				std::shared_ptr<Variable> result = node.result;
 
-				if (!PseudoOperatorUtility::has_side_effect(node.operator_)
-					|| node.operator_ == PseudoOperator::load	// which writes result
-					|| node.operator_ == PseudoOperator::read)
+				if (PseudoOperatorUtility::writes_result_in_basic_block(node.operator_))
 				{
 					auto iter = std::find_if(_variable_map.cbegin(), _variable_map.cend(),
 						[&node](const std::pair<std::shared_ptr<Variable>, int> &p) {
@@ -549,73 +550,75 @@ namespace Yradex
 		void Dag::run_dag(const FunctionIdentifier & f)
 		{
 			PseudoTable::PseudoTableFunctionSwitcher(_pseudo_table, f);
-			std::list<PseudoInstruction> list;
+			std::list<PseudoInstruction> new_ins_list;
 
-			auto &original_list = _pseudo_table.get_current_instruction_list();
-			for (auto iter = original_list.cbegin(); iter != original_list.cend();)
+			auto original_ins_list = _pseudo_table.set_instruction_list(std::list<PseudoInstruction>());
+			auto last_iter = original_ins_list.begin();
+			for (auto iter = original_ins_list.begin(); iter != original_ins_list.end();)
 			{
 				auto &ins = *iter;
+
+				// pre-check
+				if (ins.get_operator() == PseudoOperator::label && ins.get_left_argument()->get_ref() == 1)
+				{
+					iter = original_ins_list.erase(iter);
+					continue;
+				}
+
 				int left_arg_id = _calculate_node_id(ins.get_left_argument());
 				int right_arg_id = _calculate_node_id(ins.get_right_argument());
 				int operator_id = _calculate_operator_node_id(ins.get_operator(), left_arg_id, right_arg_id);
 
 				if (operator_id == -1)
 				{
-					++iter;
+					iter = original_ins_list.erase(iter);
 					continue;
 				}
 
 				_calculate_result_node(operator_id, ins.get_result());
 
+				++iter;
 				if (PseudoOperatorUtility::is_end_of_basic_block(ins.get_operator()) && operator_id != -1)
 				{
-					++iter;
-					auto node_vector_backup = _node_vector;
-
-					std::list<PseudoInstruction> temp_list;
-					_generate_code_from_map(temp_list);
-
-					if (!temp_list.empty() && temp_list.back().get_operator() == PseudoOperator::b)
+					auto &last_node = _node_vector[operator_id];
+					if (last_node.operator_ == PseudoOperator::b)
 					{
 						while (iter->get_operator() != PseudoOperator::label)
 						{
-							++iter;
+							iter = original_ins_list.erase(iter);
 						}
-						if (temp_list.back().get_result() == iter->get_left_argument())
+						if (last_node.result == iter->get_left_argument())
 						{
-							++iter;
-							temp_list.clear();
-							_node_vector = node_vector_backup;
-							_node_vector.pop_back();
+							iter = original_ins_list.erase(--iter);
+							iter = original_ins_list.erase(iter);
+							_node_vector.clear();
+							_variable_map.clear();
+							iter = last_iter;
 							continue;
 						}
 					}
 
-					list.splice(list.end(), temp_list);
+					last_iter = iter;
+					_generate_code_from_map(new_ins_list);
 					
 					_variable_map.clear();
 					_node_vector.clear();
 				}
-				else
-				{
-					++iter;
-				}
 			}
 
-			_pseudo_table.set_instruction_list(std::list<PseudoInstruction>());
-
-			_remove_useless_instructions(list);
+			original_ins_list.clear();
+			_remove_useless_instructions(new_ins_list);
 			
 			// TEST
 			std::ofstream stream("log.txt", std::ios::app);
 
 			stream << std::endl << std::endl << f.get_name() << std::endl;
-			for (auto &i : list)
+			for (auto &i : new_ins_list)
 			{
 				stream << i << std::endl;
 			}
 
-			_pseudo_table.set_instruction_list(list);
+			_pseudo_table.set_instruction_list(new_ins_list);
 
 		}
 	}

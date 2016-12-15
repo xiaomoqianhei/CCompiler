@@ -106,6 +106,31 @@ namespace Yradex
 				}
 				return false;
 			}
+
+			inline bool writes_result_in_basic_block(PseudoOperator op)
+			{
+				switch (op)
+				{
+				case PseudoOperator::b:
+				case PseudoOperator::beq:
+				case PseudoOperator::bne:
+				case PseudoOperator::bltz:
+				case PseudoOperator::blez:
+				case PseudoOperator::bgtz:
+				case PseudoOperator::bgez:
+				case PseudoOperator::print:
+				case PseudoOperator::call:
+				case PseudoOperator::ret:
+				case PseudoOperator::label:
+				case PseudoOperator::store:
+				case PseudoOperator::arg:
+				case PseudoOperator::nop:
+					return false;
+				default:
+					break;
+				}
+				return true;
+			}
 		}
 
 		class PseudoInstruction

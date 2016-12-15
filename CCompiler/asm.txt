@@ -395,72 +395,61 @@ $Lbl6:
 
 condition_test:
 		add		$sp,		$sp,		-12
-		add		$t0,		$zero,		1
-$Lbl10:
-		add		$t0,		$t0,		1
+		add		$t1,		$zero,		2
 		b		$Lbl12
-$Lbl11:
 		la		$a0,		$Str12
 		add		$v0,		$zero,		4
 		syscall
 $Lbl12:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl14
-$Lbl13:
 		la		$a0,		$Str13
 		add		$v0,		$zero,		4
 		syscall
 $Lbl14:
-		add		$t0,		$t0,		1
-$Lbl16:
-		add		$t0,		$t0,		1
+		add		$t0,		$t1,		1
+		add		$t1,		$t0,		1
 		b		$Lbl18
-$Lbl17:
 		la		$a0,		$Str15
 		add		$v0,		$zero,		4
 		syscall
 $Lbl18:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl20
-$Lbl19:
 		la		$a0,		$Str16
 		add		$v0,		$zero,		4
 		syscall
 $Lbl20:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl22
-$Lbl21:
 		la		$a0,		$Str17
 		add		$v0,		$zero,		4
 		syscall
 $Lbl22:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl24
-$Lbl23:
 		la		$a0,		$Str18
 		add		$v0,		$zero,		4
 		syscall
 $Lbl24:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl26
-$Lbl25:
 		la		$a0,		$Str19
 		add		$v0,		$zero,		4
 		syscall
 $Lbl26:
-		add		$t0,		$t0,		1
+		add		$t1,		$t1,		1
 		b		$Lbl28
-$Lbl27:
 		la		$a0,		$Str20
 		add		$v0,		$zero,		4
 		syscall
 $Lbl28:
-		beq		$t0,		10,		$Lbl29
+		beq		$t1,		10,		$Lbl29
 		la		$a0,		$Str21
 		add		$v0,		$zero,		4
 		syscall
 $Lbl29:
-		add		$v0,		$zero,		$t0
+		add		$v0,		$zero,		$t1
 		add		$sp,		$fp,		$zero
 		jr		$ra
 
@@ -552,8 +541,8 @@ for_loop_test:
 		sw		$s2,		-24($fp)
 		add		$sp,		$sp,		-28
 		add		$s2,		$zero,		2
-		add		$s1,		$zero,		0
 		add		$s0,		$zero,		0
+		add		$s1,		$zero,		0
 $Lbl32:
 		add		$t0,		$a0,		1
 		sub		$t1,		$t0,		$s0

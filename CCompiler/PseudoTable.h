@@ -151,9 +151,10 @@ namespace Yradex
 			{
 				return _instruction_map.at(_current_function);
 			}
-			void set_instruction_list(const std::list<PseudoInstruction> &list)
+			std::list<PseudoInstruction> set_instruction_list(std::list<PseudoInstruction> list)
 			{
-				_instruction_map.at(_current_function) = list;
+				_instruction_map.at(_current_function).swap(list);
+				return list;
 			}
 
 			const std::unordered_set<std::shared_ptr<Variable>, VariableHasher>& get_variable_set()
