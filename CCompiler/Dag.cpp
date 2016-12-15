@@ -583,7 +583,7 @@ namespace Yradex
 					auto &last_node = _node_vector[operator_id];
 					if (last_node.operator_ == PseudoOperator::b)
 					{
-						while (iter->get_operator() != PseudoOperator::label)
+						while (iter->get_operator() != PseudoOperator::label || iter->get_left_argument()->get_ref() == 1)
 						{
 							iter = original_ins_list.erase(iter);
 						}
