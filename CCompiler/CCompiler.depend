@@ -61,12 +61,12 @@
 	<iostream>
 	<unordered_map>
 
-1480166303 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.h
+1480481472 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.h
 	"LexicalAnalyzer.h"
 	"Error.h"
 	"PseudoTable.h"
 
-1480240754 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.cpp
+1481781806 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.cpp
 	"Parser.h"
 
 1481704133 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.cpp
@@ -76,7 +76,7 @@
 	"PseudoTable.h"
 	<map>
 
-1481767997 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.h
+1481805989 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.h
 	"Utility.h"
 	"PseudoInstruction.h"
 	"BasicErrorHandler.h"
@@ -84,14 +84,14 @@
 	<list>
 	<unordered_map>
 
-1481769438 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
+1481784816 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
 	"Utility.h"
 	"Variable.h"
 	"Error.h"
 	"SymbolTable.h"
 	<iomanip>
 
-1481720530 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
+1481805722 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
 	"Utility.h"
 	"Symbol.h"
 	"FunctionIdentifier.h"
@@ -117,40 +117,56 @@
 1479035810 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\error.cpp
 	"Error.h"
 
-1479483454 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\functiondetail.cpp
+1481704178 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\functiondetail.cpp
 	"FunctionDetail.h"
 	<algorithm>
 
 1479454417 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\functionidentifier.cpp
 	"FunctionIdentifier.h"
 
-1480219155 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.cpp
+1481781893 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.cpp
 	"Generator.h"
 
-1480172235 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.h
+1481689233 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.h
 	"PseudoTable.h"
+	"MipsOperator.h"
 
-1480075272 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\lexicalanalyzer.cpp
+1480851438 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\lexicalanalyzer.cpp
 	"LexicalAnalyzer.h"
 
-1480077213 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\optimizer.h
+1481639736 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\optimizer.h
 	"Utility.h"
 	"PseudoTable.h"
 	"Allocator.h"
 
-1480165576 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\optimizer.cpp
+1481689961 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\optimizer.cpp
 	"Optimizer.h"
+	"Dag.h"
 
-1479352832 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.cpp
+1481722142 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.cpp
 	"PseudoInstruction.h"
-
-1480219047 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.cpp
 	"PseudoTable.h"
 
-1480140233 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symboltable.cpp
-	"SymbolTable.h"
+1481715574 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudotable.cpp
+	"PseudoTable.h"
 
-1480074314 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.cpp
+1481708922 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\symboltable.cpp
+	"SymbolTable.h"
+	<iterator>
+
+1481710322 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.cpp
 	"Variable.h"
 	<sstream>
+
+1480483405 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\mipsoperator.h
+	"Utility.h"
+	<iostream>
+	<unordered_map>
+
+1480482726 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\mipsoperator.cpp
+	"MipsOperator.h"
+
+1481781376 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\dag.h
+	"PseudoTable.h"
+	<set>
 

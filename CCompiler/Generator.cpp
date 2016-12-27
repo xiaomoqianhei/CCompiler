@@ -544,7 +544,17 @@ namespace Yradex
 				{
 					std::ostringstream stream;
 					stream << static_cast<int>(_arg_count - 4) * -4 - 12 << "($sp)";
-					_print_instruction(MipsOperator::sw, value, stream.str());
+					
+					if (ins.get_left_argument()->get_variable_type() == Variable::Type::const_variable)
+					{
+						VariableAddress res_new = VariableAddress(true, 2);
+						_print_instruction(MipsOperator::add, res_new, "$zero", value);
+						_print_instruction(MipsOperator::sw, res_new, stream.str());
+					}
+					else
+					{
+						_print_instruction(MipsOperator::sw, value, stream.str());
+					}
 				}
 				++_arg_count;
 				break;
