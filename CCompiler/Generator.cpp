@@ -117,7 +117,7 @@ namespace Yradex
 			// print pseudo code
 			if (Config::generator_debug && error_handler_type::instance().should_raise(error_handler_type::Level::debug))
 			{
-				_stream << " " << _separator << "# " << ins << std::endl;
+				_stream << "    " << "# " << ins << std::endl;
 			}
 
 			switch (ins.get_operator())

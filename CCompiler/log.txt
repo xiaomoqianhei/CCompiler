@@ -3,59 +3,32 @@
 ups
 print     $Str0                                                                                                                   
 print                                             n                                       $Ltr0                                   
-sub       n2                                      $Ltr25                                  $Tmp18                                  
-blez      $Tmp18                                                                          $Lbl0                                   
-assign    $Ltr-1                                                                          $Tmp4                                   
+sub       n                                       $Ltr100                                 $Tmp10                                  
+blez      $Tmp10                                                                          $Lbl0                                   
 assign    $Ltr-1                                                                          $Tmp2                                   
-assign    $Ltr-1                                                                          $Tmp6                                   
-sub       n2                                      $Ltr1                                   $Tmp24                                  
-assign    $Tmp24                                                                          $Tmp3                                   
-sub       n1                                      $Ltr1                                   $Tmp27                                  
-assign    $Tmp27                                                                          $Tmp5                                   
-arg       $Tmp27                                                                                                                  
+sub       n                                       $Ltr1                                   $Tmp14                                  
+arg       $Tmp14                                                                                                                  
 arg       $Tmp2                                                                                                                   
-arg       $Tmp3                                                                                                                   
-arg       $Tmp4                                                                                                                   
-arg       $Tmp5                                                                                                                   
-arg       $Tmp6                                                                                                                   
-call      ups                                                                             $Tmp7                                   
+call      ups                                                                             $Tmp3                                   
 ret       $Ltr0                                                                                                                   
 label     $Lbl0                                                                                                                   
-sub       $Ltr20                                  n2                                      $Tmp32                                  
-blez      $Tmp32                                                                          $Lbl1                                   
-add       n                                       $Ltr1                                   $Tmp35                                  
-assign    $Tmp35                                                                          $Tmp10                                  
-assign    $Tmp35                                                                          $Tmp11                                  
-arg       $Tmp35                                                                                                                  
+sub       $Ltr20                                  n                                       $Tmp18                                  
+blez      $Tmp18                                                                          $Lbl1                                   
+add       n                                       $Ltr1                                   $Tmp21                                  
+arg       $Tmp21                                                                                                                  
 arg       $Ltr1                                                                                                                   
-arg       $Tmp10                                                                                                                  
-arg       $Ltr1                                                                                                                   
-arg       $Tmp11                                                                                                                  
-arg       $Ltr1                                                                                                                   
-call      ups                                                                             $Tmp12                                  
+call      ups                                                                             $Tmp6                                   
 ret       $Ltr0                                                                                                                   
 label     $Lbl1                                                                                                                   
-add       n                                       step                                    $Tmp41                                  
-assign    $Tmp41                                                                          $Tmp14                                  
-add       n2                                      step1                                   $Tmp44                                  
-assign    $Tmp44                                                                          $Tmp15                                  
-add       n                                       step2                                   $Tmp47                                  
-arg       $Tmp47                                                                                                                  
-arg       step1                                                                                                                   
-arg       $Tmp14                                                                                                                  
-arg       step1                                                                                                                   
-arg       $Tmp15                                                                                                                  
-arg       step1                                                                                                                   
-call      ups                                                                             $Tmp16                                  
+add       n                                       step                                    $Tmp25                                  
+arg       $Tmp25                                                                                                                  
+arg       step                                                                                                                    
+call      ups                                                                             $Tmp8                                   
 ret       $Ltr0                                                                                                                   
 
 
 main
 arg       $Ltr19                                                                                                                  
 arg       $Ltr1                                                                                                                   
-arg       $Ltr19                                                                                                                  
-arg       $Ltr1                                                                                                                   
-arg       $Ltr19                                                                                                                  
-arg       $Ltr1                                                                                                                   
-call      ups                                                                             $Tmp17                                  
+call      ups                                                                             $Tmp9                                   
 ret                                                                                                                               
