@@ -39,6 +39,9 @@ namespace Yradex
 			bool is_in_register(const std::shared_ptr<Variable> &v);
 			size_t get_max_used_register();
 
+			void clear_temp_variables(const std::map<std::shared_ptr<Variable>, size_t> &variable_counter);
+			void assign_register(const VariableAddress &addr, const std::shared_ptr<Variable> &v);
+
 		};
 
 
@@ -48,6 +51,9 @@ namespace Yradex
 			using string_type = std::string;
 			using char_type = typename string_type::value_type;
 			using error_handler_type = BasicErrorHandler;
+
+		private:
+			std::map<std::shared_ptr<Variable>, size_t> _variable_counter;
 
 		public:
 			void allocate(PseudoTable &table);

@@ -1076,7 +1076,7 @@ namespace Yradex
 				return Variable::null();
 			}
 
-			auto res = _declear_temp_variable(Symbol::int_symbol);
+			auto res = _declear_temp_variable(_get_function_detail(name)->get_return_type());
 			_insert_instruction(PseudoInstruction(PseudoOperator::call, _get_function_label(name), Variable::null(), res));
 			_debug("Generated function call");
 			return res;

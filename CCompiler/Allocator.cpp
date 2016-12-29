@@ -81,6 +81,21 @@ namespace Yradex
 		{
 			return _max_used;
 		}
+		void MemoryPool::clear_temp_variables(const std::map<std::shared_ptr<Variable>, size_t> &variable_counter)
+		{
+			for (auto &i : _register_pool)
+			{
+				if (i.second->is_temp() && i.second->get_ref() == variable_counter.at(i.second))
+				{
+					i.second = Variable::null();
+				}
+			}
+		}
+		void MemoryPool::assign_register(const VariableAddress &addr, const std::shared_ptr<Variable> &v)
+		{
+			_register_pool[addr.position] = v;
+			v->set_address(addr);
+		}
 		void Allocator::allocate(PseudoTable & table)
 		{
 			auto function_detail = table.get_current_function_detail();
@@ -108,27 +123,42 @@ namespace Yradex
 			{
 				// TODO
 
-				//if (ins.get_left_argument() != Variable::null())
-				//{
-				//	if (ins.get_left_argument()->get_variable_type() == Variable::Type::variable 
-				//		&& ins.get_left_argument()->is_temp())
-				//	{
-				//		memory_pool.pop_register(ins.get_left_argument());
-				//	}
-				//}
-				//if (ins.get_right_argument() != Variable::null())
-				//{
-				//	if (ins.get_right_argument()->get_variable_type() == Variable::Type::variable 
-				//		&& ins.get_right_argument()->is_temp())
-				//	{
-				//		memory_pool.pop_register(ins.get_right_argument());
-				//	}
-				//}
-				if (ins.get_result() != Variable::null())
+				if (ins.get_left_argument() != Variable::null())
 				{
-					if (ins.get_result()->get_variable_type() == Variable::Type::variable && ins.get_result()->is_temp())
+					if (ins.get_left_argument()->get_variable_type() == Variable::Type::variable 
+						&& ins.get_left_argument()->is_temp())
 					{
-						ins.get_result()->set_address(memory_pool.push(ins.get_result()));
+						_variable_counter[ins.get_left_argument()]++;
+					}
+				}
+				if (ins.get_right_argument() != Variable::null())
+				{
+					if (ins.get_right_argument()->get_variable_type() == Variable::Type::variable 
+						&& ins.get_right_argument()->is_temp())
+					{
+						_variable_counter[ins.get_right_argument()]++;
+					}
+				}
+
+				auto result = ins.get_result();
+				VariableAddress resultAddress;
+				if (result != Variable::null())
+				{
+					if (result->get_variable_type() == Variable::Type::variable && result->is_temp())
+					{
+						resultAddress = memory_pool.push(result);
+						result->set_address(resultAddress);
+						_variable_counter[result]++;
+					}
+				}
+
+				// clear temps when end of basic block
+				if (PseudoOperatorUtility::is_end_of_basic_block(ins.get_operator()))
+				{
+					memory_pool.clear_temp_variables(_variable_counter);
+					if (ins.get_operator() == PseudoOperator::call && resultAddress.in_register)
+					{
+						memory_pool.assign_register(resultAddress, ins.get_result());
 					}
 				}
 			}
@@ -155,6 +185,7 @@ namespace Yradex
 
 			table.set_max_used_register(std::min(memory_pool.get_max_used_register(), 23u));
 
+			_variable_counter.clear();
 		}
 	}
 }

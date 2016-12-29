@@ -55,7 +55,7 @@ namespace Yradex
 				case PseudoOperator::call:
 				case PseudoOperator::ret:
 				case PseudoOperator::label:
-				case PseudoOperator::arg:
+				//case PseudoOperator::arg:
 					return true;
 				default:
 					break;

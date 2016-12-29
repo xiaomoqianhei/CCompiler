@@ -362,7 +362,7 @@ namespace Yradex
 					}
 				}
 			}
-			else
+			else  // node.type == DagNode::Type::operator_
 			{
 				std::shared_ptr<Variable> left_arg = Variable::null();
 				std::shared_ptr<Variable> right_arg = Variable::null();

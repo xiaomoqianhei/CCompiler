@@ -91,7 +91,7 @@ namespace Yradex
 			bool _is_temp;
 			VariableAddress _addr;
 			FunctionIdentifier _function;
-			int _ref = 0;
+			unsigned _ref = 0;
 
 		public:
 			static const std::shared_ptr<Variable>& null()
@@ -227,7 +227,7 @@ namespace Yradex
 				_ref--;
 			}
 
-			int get_ref() const
+			unsigned get_ref() const
 			{
 				return _ref;
 			}
