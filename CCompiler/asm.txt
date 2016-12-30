@@ -1,40 +1,6 @@
 		.data
-array:		.space		12
-$Str8:		.asciiz		"Error in function_call_test: add_one_until(test_var, seed) != "
-$Str0:		.asciiz		"IO test: please input num 0    "
-$Str1:		.asciiz		"Error in io_test: test_var != 0    "
-$Str2:		.asciiz		"IO test: please input string (EXACTLY these chars, otherwise may cause exception, <enter> stands for enter key): 1<enter>99999999<enter>gN-20<enter>    "
-$Str3:		.asciiz		"Error in io_test: test_var != 1    "
-$Str4:		.asciiz		"Error in io_test: t2 != 99999999    "
-$Str5:		.asciiz		"Error in io_test: t3 != g    "
-$Str6:		.asciiz		"Error in io_test: t4 != N    "
-$Str7:		.asciiz		"Error in io_test: t5 != -20    "
-$Str9:		.asciiz		"    "
-$Str10:		.asciiz		"Error in function_call_test: test_var != 0    "
-$Str29:		.asciiz		"Error in assign_and_expression_test: wrong result 5    "
-$Str11:		.asciiz		"Error in condition_test: 20 - 20 is true    "
-$Str28:		.asciiz		"Error in assign_and_expression_test: wrong result 4    "
-$Str12:		.asciiz		"Error in condition_test: 15 - 17 is false    "
-$Str13:		.asciiz		"Error in condition_test: 10 + 20 + 30 + 40 == 100 is false    "
-$Str14:		.asciiz		"Error in condition_test: 10 + 20 + 30 + 40 != 100 is true    "
-$Str15:		.asciiz		"Error in condition_test: 240 > 120 is false    "
-$Str16:		.asciiz		"Error in condition_test: 120 < 240 is false    "
-$Str17:		.asciiz		"Error in condition_test: 120 <= 240 is false    "
-$Str18:		.asciiz		"Error in condition_test: 240 < 240 is false    "
-$Str21:		.asciiz		"Error in condition_test    "
-$Str19:		.asciiz		"Error in condition_test: 240 >= 120 is false    "
-$Str20:		.asciiz		"Error in condition_test: 120 >= 120 is false    "
-$Str22:		.asciiz		"Error in do_while_loop_test: wrong result    "
-$Str23:		.asciiz		"Error in for_loop_test: wrong result 1    "
-$Str24:		.asciiz		"Error in for_loop_test: wrong result 2    "
-$Str25:		.asciiz		"Error in assign_and_expression_test: wrong result 1    "
-$Str26:		.asciiz		"Error in assign_and_expression_test: wrong result 2    "
-$Str27:		.asciiz		"Error in assign_and_expression_test: wrong result 3    "
-$Str30:		.asciiz		"Error in try_fibonacci: wrong result    "
-$Str31:		.asciiz		"Please input a seed for further tests (between 10 and 1000):    "
-$Str32:		.asciiz		"All tests ended successfully. "
-$Str33:		.asciiz		" of "
-$Str34:		.asciiz		" cases passed.    "
+$Str1:		.asciiz		"  "
+$Str0:		.asciiz		" "
 		.text
 		add		$fp,		$sp,		$zero
 		la		$ra,		finish
@@ -45,267 +11,121 @@ main:
 		sw		$s1,		-16($fp)
 		sw		$s2,		-20($fp)
 		sw		$s3,		-24($fp)
-		add		$sp,		$sp,		-28
-    # assign    $Ltr0                                                                           passed_count                            
-		add		$s3,		$zero,		0
-    # call      io_test                                                                         $Tmp123                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		io_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-    # add       passed_count                            $Tmp123                                 passed_count                            
-		add		$s3,		$s3,		$s0
-    # print     $Str31                                                                                                                  
-		la		$a0,		$Str31
+		sw		$s4,		-28($fp)
+		sw		$s5,		-32($fp)
+		add		$sp,		$sp,		-76
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
 		add		$v0,		$zero,		4
 		syscall
-    # read                                                                                      seed                                    
-		add		$v0,		$zero,		5
+    # assign    $Ltr10                                                                          t                                       
+		add		$s5,		$zero,		10
+    # print                                             $Ltr10                                  $Ltr0                                   
+		add		$a0,		$zero,		10
+		add		$v0,		$zero,		1
 		syscall
-		add		$s2,		$zero,		$v0
-    # arg       seed                                                                                                                    
-		add		$a0,		$zero,		$s2
-    # call      function_call_test                                                              $Tmp125                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		function_call_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s1,		$zero,		$v0
-    # add       passed_count                            $Tmp125                                 passed_count                            
-		add		$s3,		$s3,		$s1
-    # call      condition_test                                                                  $Tmp127                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		condition_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-    # add       passed_count                            $Tmp127                                 passed_count                            
-		add		$s3,		$s3,		$s0
-    # arg       seed                                                                                                                    
-		add		$a0,		$zero,		$s2
-    # call      do_while_loop_test                                                              $Tmp129                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		do_while_loop_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s1,		$zero,		$v0
-    # add       passed_count                            $Tmp129                                 passed_count                            
-		add		$s3,		$s3,		$s1
-    # arg       seed                                                                                                                    
-		add		$a0,		$zero,		$s2
-    # call      for_loop_test                                                                   $Tmp131                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		for_loop_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-    # add       passed_count                            $Tmp131                                 passed_count                            
-		add		$s3,		$s3,		$s0
-    # call      assign_and_expression_test                                                      $Tmp133                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		assign_and_expression_test
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s1,		$zero,		$v0
-    # add       passed_count                            $Tmp133                                 passed_count                            
-		add		$s3,		$s3,		$s1
-    # call      try_fibonacci                                                                   $Tmp135                                 
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		try_fibonacci
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-    # print     $Str32                                                                                                                  
-		la		$a0,		$Str32
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
 		add		$v0,		$zero,		4
 		syscall
-    # add       passed_count                            $Tmp135                                 passed_count                            
-		add		$s3,		$s3,		$s0
-    # print                                             passed_count                            $Ltr0                                   
+    # print                                             $Ltr90                                  $Ltr0                                   
+		add		$a0,		$zero,		90
+		add		$v0,		$zero,		1
+		syscall
+    # assign    $Ltr100                                                                         x                                       
+		add		$s4,		$zero,		100
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # print                                             $Ltr197                                 $Ltr0                                   
+		add		$a0,		$zero,		197
+		add		$v0,		$zero,		1
+		syscall
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # print                                             $Ltr110                                 $Ltr0                                   
+		add		$a0,		$zero,		110
+		add		$v0,		$zero,		1
+		syscall
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # print                                             $Ltr110                                 $Ltr0                                   
+		add		$a0,		$zero,		110
+		add		$v0,		$zero,		1
+		syscall
+    # print     $Str1                                                                                                                   
+		la		$a0,		$Str1
+		add		$v0,		$zero,		4
+		syscall
+    # call      ret_int                                                                         $Tmp4                                   
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		ret_int
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s0,		$zero,		$v0
+    # print                                             $Tmp4                                   $Ltr0                                   
+		add		$a0,		$zero,		$s0
+		add		$v0,		$zero,		1
+		syscall
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # print                                             c                                       $Ltr1                                   
+		add		$a0,		$zero,		99
+		add		$v0,		$zero,		11
+		syscall
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # print                                             x                                       $Ltr1                                   
+		add		$a0,		$zero,		$s4
+		add		$v0,		$zero,		11
+		syscall
+    # add       x                                       t                                       $Tmp17                                  
+		add		$s1,		$s4,		$s5
+    # store     $Ltr5                                   $Tmp17                                  arr                                     
+		add		$v0,		$zero,		-52
+		add		$v0,		$v0,		$fp
+		sw		$s1,		($v0)
+    # print     $Str0                                                                                                                   
+		la		$a0,		$Str0
+		add		$v0,		$zero,		4
+		syscall
+    # load      arr                                     $Ltr5                                   $Tmp20                                  
+		add		$v0,		$zero,		-52
+		add		$v0,		$v0,		$fp
+		lw		$s2,		($v0)
+    # print                                             $Tmp20                                  $Ltr1                                   
+		add		$a0,		$zero,		$s2
+		add		$v0,		$zero,		11
+		syscall
+    # print     $Str1                                                                                                                   
+		la		$a0,		$Str1
+		add		$v0,		$zero,		4
+		syscall
+    # call      ret_char                                                                        $Tmp7                                   
+		sw		$fp,		-4($sp)
+		add		$fp,		$sp,		$zero
+		sw		$ra,		-8($sp)
+		jal		ret_char
+		lw		$fp,		-4($sp)
+		lw		$ra,		-8($sp)
+		add		$s3,		$zero,		$v0
+    # print                                             $Tmp7                                   $Ltr1                                   
 		add		$a0,		$zero,		$s3
-		add		$v0,		$zero,		1
-		syscall
-    # print     $Str33                                                                                                                  
-		la		$a0,		$Str33
-		add		$v0,		$zero,		4
-		syscall
-    # print                                             $Ltr27                                  $Ltr0                                   
-		add		$a0,		$zero,		27
-		add		$v0,		$zero,		1
-		syscall
-    # print     $Str34                                                                                                                  
-		la		$a0,		$Str34
-		add		$v0,		$zero,		4
+		add		$v0,		$zero,		11
 		syscall
     # ret                                                                                                                               
 		add		$v0,		$zero,		0
-		lw		$s3,		-24($fp)
-		lw		$s2,		-20($fp)
-		lw		$s1,		-16($fp)
-		lw		$s0,		-12($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-assign_and_expression_test:
-		sw		$s0,		-12($fp)
-		sw		$s1,		-16($fp)
-		sw		$s2,		-20($fp)
-		sw		$s3,		-24($fp)
-		sw		$s4,		-28($fp)
-		sw		$s5,		-32($fp)
-		sw		$s6,		-36($fp)
-		sw		$s7,		-40($fp)
-		add		$sp,		$sp,		-128
-    # assign    $Ltr5                                                                           passed_count                            
-		add		$s6,		$zero,		5
-    # store     $Ltr20                                  $Ltr10946                               array                                   
-		add		$v0,		$zero,		-44
-		add		$v0,		$v0,		$fp
-		add		$v1,		$zero,		10946
-		sw		$v1,		($v0)
-    # store     $Ltr19                                  $Ltr6765                                array                                   
-		add		$v0,		$zero,		-48
-		add		$v0,		$v0,		$fp
-		add		$v1,		$zero,		6765
-		sw		$v1,		($v0)
-    # assign    $Ltr18                                                                          i                                       
-		add		$t8,		$zero,		18
-    # label     $Lbl40                                                                                                                  
-$Lbl40:
-    # bltz      i                                                                               $Lbl41                                  
-		bltz		$t8,		$Lbl41
-    # add       i                                       $Ltr2                                   $Tmp177                                 
-		add		$t0,		$t8,		2
-    # load      array                                   $Tmp177                                 $Tmp180                                 
-		mul		$v0,		$t0,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t1,		($v0)
-    # add       i                                       $Ltr1                                   $Tmp183                                 
-		add		$t2,		$t8,		1
-    # load      array                                   $Tmp183                                 $Tmp186                                 
-		mul		$v0,		$t2,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t3,		($v0)
-    # sub       $Tmp180                                 $Tmp186                                 $Tmp189                                 
-		sub		$t4,		$t1,		$t3
-    # store     i                                       $Tmp189                                 array                                   
-		mul		$v0,		$t8,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		sw		$t4,		($v0)
-    # add       i                                       $Ltr-1                                  i                                       
-		add		$t8,		$t8,		-1
-    # b                                                                                         $Lbl40                                  
-		b		$Lbl40
-    # label     $Lbl41                                                                                                                  
-$Lbl41:
-    # load      array                                   $Ltr11                                  $Tmp193                                 
-		add		$v0,		$zero,		-80
-		add		$v0,		$v0,		$fp
-		lw		$t0,		($v0)
-    # beq       $Tmp193                                 $Ltr144                                 $Lbl42                                  
-		beq		$t0,		144,		$Lbl42
-    # print     $Str27                                                                                                                  
-		la		$a0,		$Str27
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$s6,		$s6,		1
-    # label     $Lbl42                                                                                                                  
-$Lbl42:
-    # load      array                                   $Ltr0                                   $Tmp198                                 
-		add		$v0,		$zero,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t0,		($v0)
-    # beq       $Tmp198                                 $Ltr1                                   $Lbl43                                  
-		beq		$t0,		1,		$Lbl43
-    # print     $Str28                                                                                                                  
-		la		$a0,		$Str28
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$s6,		$s6,		1
-    # label     $Lbl43                                                                                                                  
-$Lbl43:
-    # load      array                                   $Ltr1                                   $Tmp208                                 
-		add		$v0,		$zero,		-120
-		add		$v0,		$v0,		$fp
-		lw		$t0,		($v0)
-    # load      array                                   $Ltr2                                   $Tmp211                                 
-		add		$v0,		$zero,		-116
-		add		$v0,		$v0,		$fp
-		lw		$t1,		($v0)
-    # load      array                                   $Ltr0                                   $Tmp214                                 
-		add		$v0,		$zero,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t2,		($v0)
-    # load      array                                   $Tmp214                                 $Tmp217                                 
-		mul		$v0,		$t2,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t3,		($v0)
-    # mul       $Tmp217                                 $Ltr2                                   $Tmp220                                 
-		mul		$t4,		$t3,		2
-    # load      array                                   $Tmp220                                 $Tmp223                                 
-		mul		$v0,		$t4,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t5,		($v0)
-    # load      array                                   $Tmp223                                 $Tmp226                                 
-		mul		$v0,		$t5,		4
-		add		$v0,		$v0,		-124
-		add		$v0,		$v0,		$fp
-		lw		$t6,		($v0)
-    # add       $Ltr1                                   $Tmp208                                 $Tmp229                                 
-		add		$t7,		$t0,		1
-    # add       $Tmp229                                 $Tmp211                                 $Tmp232                                 
-		add		$s0,		$t7,		$t1
-    # div       $Ltr144                                 $Tmp232                                 $Tmp235                                 
-		add		$v0,		$zero,		144
-		div		$s1,		$v0,		$s0
-    # add       $Tmp235                                 $Ltr108                                 $Tmp238                                 
-		add		$s2,		$s1,		108
-    # sub       $Tmp238                                 $Ltr87                                  $Tmp241                                 
-		sub		$s3,		$s2,		87
-    # sub       $Ltr0                                   $Tmp226                                 $Tmp244                                 
-		add		$v0,		$zero,		0
-		sub		$s4,		$v0,		$t6
-    # mul       $Ltr3                                   $Tmp244                                 $Tmp247                                 
-		mul		$s5,		$s4,		3
-    # add       $Tmp241                                 $Tmp247                                 t0                                      
-		add		$s7,		$s3,		$s5
-    # beq       t0                                      $Ltr51                                  $Lbl44                                  
-		beq		$s7,		51,		$Lbl44
-    # print     $Str29                                                                                                                  
-		la		$a0,		$Str29
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$s6,		$s6,		1
-    # label     $Lbl44                                                                                                                  
-$Lbl44:
-    # ret       passed_count                                                                                                            
-		add		$v0,		$zero,		$s6
-		lw		$s7,		-40($fp)
-		lw		$s6,		-36($fp)
 		lw		$s5,		-32($fp)
 		lw		$s4,		-28($fp)
 		lw		$s3,		-24($fp)
@@ -316,494 +136,18 @@ $Lbl44:
 		jr		$ra
 
 
-io_test:
+ret_char:
 		add		$sp,		$sp,		-12
-    # assign    $Ltr6                                                                           passed_count                            
-		add		$t5,		$zero,		6
-    # print     $Str0                                                                                                                   
-		la		$a0,		$Str0
-		add		$v0,		$zero,		4
-		syscall
-    # read                                                                                      test_var                                
-		add		$v0,		$zero,		5
-		syscall
-		add		$t2,		$zero,		$v0
-    # beq       test_var                                $Ltr0                                   $Lbl0                                   
-		beq		$t2,		0,		$Lbl0
-    # print     $Str1                                                                                                                   
-		la		$a0,		$Str1
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl0                                                                                                                   
-$Lbl0:
-    # print     $Str2                                                                                                                   
-		la		$a0,		$Str2
-		add		$v0,		$zero,		4
-		syscall
-    # read                                                                                      test_var                                
-		add		$v0,		$zero,		5
-		syscall
-		add		$t2,		$zero,		$v0
-    # read                                                                                      t2                                      
-		add		$v0,		$zero,		5
-		syscall
-		add		$t1,		$zero,		$v0
-    # read                                                                                      c3                                      
-		add		$v0,		$zero,		12
-		syscall
-		add		$t0,		$zero,		$v0
-    # read                                                                                      c4                                      
-		add		$v0,		$zero,		12
-		syscall
-		add		$t3,		$zero,		$v0
-    # read                                                                                      t5                                      
-		add		$v0,		$zero,		5
-		syscall
-		add		$t4,		$zero,		$v0
-    # beq       test_var                                $Ltr1                                   $Lbl1                                   
-		beq		$t2,		1,		$Lbl1
-    # print     $Str3                                                                                                                   
-		la		$a0,		$Str3
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl1                                                                                                                   
-$Lbl1:
-    # beq       t2                                      $Ltr99999999                            $Lbl2                                   
-		beq		$t1,		99999999,		$Lbl2
-    # print     $Str4                                                                                                                   
-		la		$a0,		$Str4
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl2                                                                                                                   
-$Lbl2:
-    # beq       c3                                      $Ltr103                                 $Lbl3                                   
-		beq		$t0,		103,		$Lbl3
-    # print     $Str5                                                                                                                   
-		la		$a0,		$Str5
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl3                                                                                                                   
-$Lbl3:
-    # beq       c4                                      $Ltr78                                  $Lbl4                                   
-		beq		$t3,		78,		$Lbl4
-    # print     $Str6                                                                                                                   
-		la		$a0,		$Str6
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl4                                                                                                                   
-$Lbl4:
-    # beq       t5                                      $Ltr-20                                 $Lbl5                                   
-		beq		$t4,		-20,		$Lbl5
-    # print     $Str7                                                                                                                   
-		la		$a0,		$Str7
-		add		$v0,		$zero,		4
-		syscall
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl5                                                                                                                   
-$Lbl5:
-    # ret       passed_count                                                                                                            
-		add		$v0,		$zero,		$t5
+    # ret       $Ltr105                                                                                                                 
+		add		$v0,		$zero,		105
 		add		$sp,		$fp,		$zero
 		jr		$ra
 
 
-add_one_until:
-		sw		$s0,		-20($fp)
-		add		$sp,		$sp,		-24
-    # sub       dest                                    now                                     $Tmp274                                 
-		sub		$s0,		$a1,		$a0
-    # blez      $Tmp274                                                                         $Lbl6                                   
-		blez		$s0,		$Lbl6
-    # add       now                                     $Ltr1                                   now                                     
-		add		$a0,		$a0,		1
-    # arg       now                                                                                                                     
-		sub		$sp,		$sp,		4
-		sw		$a0,		0($sp)
-		sw		$a1,		4($sp)
-		lw		$v0,		0($sp)
-		add		$a0,		$zero,		$v0
-    # arg       dest                                                                                                                    
-		lw		$v0,		4($sp)
-		add		$a1,		$zero,		$v0
-    # call      add_one_until                                                                   $Tmp9                                   
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		add_one_until
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-		lw		$a0,		0($sp)
-		lw		$a1,		4($sp)
-		add		$sp,		$sp,		4
-    # ret       $Tmp9                                                                                                                   
-		add		$v0,		$zero,		$s0
-		lw		$s0,		-20($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-    # label     $Lbl6                                                                                                                   
-$Lbl6:
-    # ret       now                                                                                                                     
-		add		$v0,		$zero,		$a0
-		lw		$s0,		-20($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-condition_test:
+ret_int:
 		add		$sp,		$sp,		-12
-    # ret       $Ltr10                                                                                                                  
-		add		$v0,		$zero,		10
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-function_call_test:
-		sw		$s0,		-16($fp)
-		sw		$s1,		-20($fp)
-		sw		$s2,		-24($fp)
-		add		$sp,		$sp,		-28
-    # assign    $Ltr2                                                                           passed_count                            
-		add		$s2,		$zero,		2
-    # assign    $Ltr0                                                                           test_var                                
-		add		$s1,		$zero,		0
-    # arg       $Ltr0                                                                                                                   
-		sub		$sp,		$sp,		0
-		sw		$a0,		0($sp)
-		add		$a0,		$zero,		0
-    # arg       seed                                                                                                                    
-		lw		$v0,		0($sp)
-		add		$a1,		$zero,		$v0
-    # call      add_one_until                                                                   $Tmp10                                  
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		add_one_until
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		add		$s0,		$zero,		$v0
-		lw		$a0,		0($sp)
-		add		$sp,		$sp,		0
-    # beq       $Tmp10                                  seed                                    $Lbl7                                   
-		beq		$s0,		$a0,		$Lbl7
-    # print     $Str8                                                                                                                   
-		sw		$a0,		($sp)
-		la		$a0,		$Str8
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # print                                             seed                                    $Ltr0                                   
-		sw		$a0,		($sp)
-		add		$a0,		$zero,		$a0
-		add		$v0,		$zero,		1
-		syscall
-		lw		$a0,		($sp)
-    # print     $Str9                                                                                                                   
-		sw		$a0,		($sp)
-		la		$a0,		$Str9
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$s2,		$s2,		1
-    # label     $Lbl7                                                                                                                   
-$Lbl7:
-    # beq       test_var                                $Ltr0                                   $Lbl8                                   
-		beq		$s1,		0,		$Lbl8
-    # print     $Str10                                                                                                                  
-		sw		$a0,		($sp)
-		la		$a0,		$Str10
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$s2,		$s2,		1
-    # label     $Lbl8                                                                                                                   
-$Lbl8:
-    # ret       passed_count                                                                                                            
-		add		$v0,		$zero,		$s2
-		lw		$s2,		-24($fp)
-		lw		$s1,		-20($fp)
-		lw		$s0,		-16($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-do_while_loop_test:
-		add		$sp,		$sp,		-16
-    # assign    $Ltr1                                                                           passed_count                            
-		add		$t5,		$zero,		1
-    # assign    $Ltr0                                                                           test_var                                
-		add		$t4,		$zero,		0
-    # assign    $Ltr0                                                                           i                                       
-		add		$t3,		$zero,		0
-    # label     $Lbl30                                                                                                                  
-$Lbl30:
-    # add       i                                       $Ltr1                                   i                                       
-		add		$t3,		$t3,		1
-    # add       test_var                                i                                       test_var                                
-		add		$t4,		$t4,		$t3
-    # sub       seed                                    i                                       $Tmp319                                 
-		sub		$t0,		$a0,		$t3
-    # bgtz      $Tmp319                                                                         $Lbl30                                  
-		bgtz		$t0,		$Lbl30
-    # add       $Ltr1                                   seed                                    $Tmp322                                 
-		add		$t0,		$a0,		1
-    # mul       $Tmp322                                 seed                                    $Tmp325                                 
-		mul		$t1,		$t0,		$a0
-    # div       $Tmp325                                 $Ltr2                                   $Tmp328                                 
-		div		$t2,		$t1,		2
-    # beq       test_var                                $Tmp328                                 $Lbl31                                  
-		beq		$t4,		$t2,		$Lbl31
-    # print     $Str22                                                                                                                  
-		sw		$a0,		($sp)
-		la		$a0,		$Str22
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl31                                                                                                                  
-$Lbl31:
-    # ret       passed_count                                                                                                            
-		add		$v0,		$zero,		$t5
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-for_loop_test:
-		add		$sp,		$sp,		-16
-    # assign    $Ltr2                                                                           passed_count                            
-		add		$t5,		$zero,		2
-    # assign    $Ltr0                                                                           i                                       
-		add		$t3,		$zero,		0
-    # assign    $Ltr0                                                                           test_var                                
-		add		$t4,		$zero,		0
-    # label     $Lbl32                                                                                                                  
-$Lbl32:
-    # add       seed                                    $Ltr1                                   $Tmp336                                 
-		add		$t0,		$a0,		1
-    # sub       $Tmp336                                 i                                       $Tmp339                                 
-		sub		$t1,		$t0,		$t3
-    # blez      $Tmp339                                                                         $Lbl33                                  
-		blez		$t1,		$Lbl33
-    # add       test_var                                i                                       test_var                                
-		add		$t4,		$t4,		$t3
-    # add       i                                       $Ltr1                                   i                                       
-		add		$t3,		$t3,		1
-    # b                                                                                         $Lbl32                                  
-		b		$Lbl32
-    # label     $Lbl33                                                                                                                  
-$Lbl33:
-    # add       $Ltr1                                   seed                                    $Tmp345                                 
-		add		$t0,		$a0,		1
-    # mul       $Tmp345                                 seed                                    $Tmp348                                 
-		mul		$t1,		$t0,		$a0
-    # div       $Tmp348                                 $Ltr2                                   $Tmp351                                 
-		div		$t2,		$t1,		2
-    # beq       test_var                                $Tmp351                                 $Lbl34                                  
-		beq		$t4,		$t2,		$Lbl34
-    # print     $Str23                                                                                                                  
-		sw		$a0,		($sp)
-		la		$a0,		$Str23
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl34                                                                                                                  
-$Lbl34:
-    # assign    $Ltr0                                                                           test_var                                
-		add		$t4,		$zero,		0
-    # assign    seed                                                                            i                                       
-		add		$t3,		$zero,		$a0
-    # label     $Lbl35                                                                                                                  
-$Lbl35:
-    # beq       i                                       $Ltr0                                   $Lbl36                                  
-		beq		$t3,		0,		$Lbl36
-    # add       test_var                                i                                       test_var                                
-		add		$t4,		$t4,		$t3
-    # add       i                                       $Ltr-1                                  i                                       
-		add		$t3,		$t3,		-1
-    # b                                                                                         $Lbl35                                  
-		b		$Lbl35
-    # label     $Lbl36                                                                                                                  
-$Lbl36:
-    # add       $Ltr1                                   seed                                    $Tmp361                                 
-		add		$t0,		$a0,		1
-    # mul       $Tmp361                                 seed                                    $Tmp364                                 
-		mul		$t1,		$t0,		$a0
-    # div       $Tmp364                                 $Ltr2                                   $Tmp367                                 
-		div		$t2,		$t1,		2
-    # beq       test_var                                $Tmp367                                 $Lbl37                                  
-		beq		$t4,		$t2,		$Lbl37
-    # print     $Str24                                                                                                                  
-		sw		$a0,		($sp)
-		la		$a0,		$Str24
-		add		$v0,		$zero,		4
-		syscall
-		lw		$a0,		($sp)
-    # sub       passed_count                            $Ltr1                                   passed_count                            
-		sub		$t5,		$t5,		1
-    # label     $Lbl37                                                                                                                  
-$Lbl37:
-    # ret       passed_count                                                                                                            
-		add		$v0,		$zero,		$t5
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-init_array:
-		add		$sp,		$sp,		-12
-    # store     $Ltr0                                   $Ltr-1                                  array                                   
-		add		$v0,		$zero,		268500992
-		add		$v1,		$zero,		-1
-		sw		$v1,		($v0)
-    # store     $Ltr1                                   $Ltr0                                   array                                   
-		add		$v0,		$zero,		268500996
-		add		$v1,		$zero,		0
-		sw		$v1,		($v0)
-    # store     $Ltr2                                   $Ltr1                                   array                                   
-		add		$v0,		$zero,		268501000
-		add		$v1,		$zero,		1
-		sw		$v1,		($v0)
-    # ret                                                                                                                               
-		add		$v0,		$zero,		0
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-swap_items_in_array:
-		add		$sp,		$sp,		-12
-    # assign    $Ltr0                                                                           i                                       
-		add		$t2,		$zero,		0
-    # label     $Lbl45                                                                                                                  
-$Lbl45:
-    # sub       $Ltr2                                   i                                       $Tmp373                                 
-		add		$v0,		$zero,		2
-		sub		$t0,		$v0,		$t2
-    # blez      $Tmp373                                                                         $Lbl46                                  
-		blez		$t0,		$Lbl46
-    # assign    i                                                                               $Tmp376                                 
-		add		$t0,		$zero,		$t2
-    # add       i                                       $Ltr1                                   i                                       
-		add		$t2,		$t2,		1
-    # load      array                                   i                                       $Tmp378                                 
-		mul		$v0,		$t2,		4
-		add		$v0,		$v0,		268500992
-		lw		$t1,		($v0)
-    # store     $Tmp376                                 $Tmp378                                 array                                   
-		mul		$v0,		$t0,		4
-		add		$v0,		$v0,		268500992
-		sw		$t1,		($v0)
-    # b                                                                                         $Lbl45                                  
-		b		$Lbl45
-    # label     $Lbl46                                                                                                                  
-$Lbl46:
-    # ret                                                                                                                               
-		add		$v0,		$zero,		0
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-calculate_fibonacci:
-		sw		$s0,		-16($fp)
-		sw		$s1,		-20($fp)
-		sw		$s2,		-24($fp)
-		sw		$s3,		-28($fp)
-		sw		$s4,		-32($fp)
-		add		$sp,		$sp,		-36
-    # label     $Lbl47                                                                                                                  
-$Lbl47:
-    # call      swap_items_in_array                                                                                                     
-		sub		$sp,		$sp,		0
-		sw		$a0,		0($sp)
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		swap_items_in_array
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-		lw		$a0,		0($sp)
-		add		$sp,		$sp,		0
-    # load      array                                   $Ltr0                                   $Tmp381                                 
-		add		$v0,		$zero,		268500992
-		lw		$s0,		($v0)
-    # load      array                                   $Ltr1                                   $Tmp384                                 
-		add		$v0,		$zero,		268500996
-		lw		$s1,		($v0)
-    # add       $Tmp381                                 $Tmp384                                 $Tmp387                                 
-		add		$s2,		$s0,		$s1
-    # store     $Ltr2                                   $Tmp387                                 array                                   
-		add		$v0,		$zero,		268501000
-		sw		$s2,		($v0)
-    # load      array                                   $Ltr2                                   $Tmp390                                 
-		add		$v0,		$zero,		268501000
-		lw		$s3,		($v0)
-    # sub       max_num                                 $Tmp390                                 $Tmp393                                 
-		sub		$s4,		$a0,		$s3
-    # bgez      $Tmp393                                                                         $Lbl47                                  
-		bgez		$s4,		$Lbl47
-    # ret                                                                                                                               
-		add		$v0,		$zero,		0
-		lw		$s4,		-32($fp)
-		lw		$s3,		-28($fp)
-		lw		$s2,		-24($fp)
-		lw		$s1,		-20($fp)
-		lw		$s0,		-16($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-
-
-try_fibonacci:
-		sw		$s0,		-12($fp)
-		add		$sp,		$sp,		-16
-    # call      init_array                                                                                                              
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		init_array
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-    # arg       max_num                                                                                                                 
-		add		$a0,		$zero,		9999999
-    # call      calculate_fibonacci                                                                                                     
-		sw		$fp,		-4($sp)
-		add		$fp,		$sp,		$zero
-		sw		$ra,		-8($sp)
-		jal		calculate_fibonacci
-		lw		$fp,		-4($sp)
-		lw		$ra,		-8($sp)
-    # load      array                                   $Ltr2                                   $Tmp396                                 
-		add		$v0,		$zero,		268501000
-		lw		$s0,		($v0)
-    # beq       $Tmp396                                 $Ltr14930352                            $Lbl48                                  
-		beq		$s0,		14930352,		$Lbl48
-    # print     $Str30                                                                                                                  
-		la		$a0,		$Str30
-		add		$v0,		$zero,		4
-		syscall
-    # ret       $Ltr0                                                                                                                   
-		add		$v0,		$zero,		0
-		lw		$s0,		-12($fp)
-		add		$sp,		$fp,		$zero
-		jr		$ra
-    # label     $Lbl48                                                                                                                  
-$Lbl48:
-    # ret       $Ltr1                                                                                                                   
-		add		$v0,		$zero,		1
-		lw		$s0,		-12($fp)
+    # ret       $Ltr105                                                                                                                 
+		add		$v0,		$zero,		105
 		add		$sp,		$fp,		$zero
 		jr		$ra
 finish:

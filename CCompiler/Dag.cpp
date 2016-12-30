@@ -343,7 +343,6 @@ namespace Yradex
 						&& p.first->get_variable_type() == Variable::Type::variable
 						&& p.first != node.variable)
 					{
-						// FIX check it
 						// copy result
 						if (p.first->get_variable_type() == Variable::Type::variable)
 						{
@@ -402,7 +401,6 @@ namespace Yradex
 					}
 				}
 
-				// FIX check it
 				// copy result
 				if (result->get_variable_type() == Variable::Type::variable)
 				{
@@ -429,7 +427,6 @@ namespace Yradex
 					if (p.second == node.id && p.first != result
 						&& p.first->get_variable_type() == Variable::Type::variable)
 					{
-						// FIX check it
 						// copy result
 						if (p.first->get_variable_type() == Variable::Type::variable)
 						{

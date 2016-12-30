@@ -452,7 +452,6 @@ namespace Yradex
 			}
 			case PseudoOperator::load:
 			{
-				// FIX
 				int addr = ins.get_left_argument()->position();
 				if (ins.get_right_argument()->is_const())
 				{
@@ -487,7 +486,6 @@ namespace Yradex
 			}
 			case PseudoOperator::store:
 			{
-				// FIX
 				string_type index = _get_argument_1(ins);
 				string_type value = _get_argument_2(ins);
 

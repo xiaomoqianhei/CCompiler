@@ -121,8 +121,6 @@ namespace Yradex
 			// allocate for temps
 			for (const auto &ins : table.get_current_instruction_list())
 			{
-				// TODO
-
 				if (ins.get_left_argument() != Variable::null())
 				{
 					if (ins.get_left_argument()->get_variable_type() == Variable::Type::variable 

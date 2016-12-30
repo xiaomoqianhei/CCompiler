@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1480232636 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\main.cpp
+1483019620 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\main.cpp
 	"BasicErrorHandler.h"
 	"Parser.h"
 	"Optimizer.h"
 	"Generator.h"
+	<fstream>
 
 1480075243 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\lexicalanalyzer.h
 	"symbol.h"
@@ -38,7 +39,7 @@
 1478587532 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\standarderrorhandler.cpp
 	"StandardErrorHandler.h"
 
-1481719296 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\utility.h
+1483014396 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\utility.h
 	<cassert>
 	<string>
 
@@ -56,7 +57,7 @@
 	<unordered_map>
 	<algorithm>
 
-1481640679 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\error.h
+1483078619 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\error.h
 	"Utility.h"
 	<iostream>
 	<unordered_map>
@@ -66,13 +67,13 @@
 	"Error.h"
 	"PseudoTable.h"
 
-1481781806 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.cpp
+1483075541 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\parser.cpp
 	"Parser.h"
 
-1481704133 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.cpp
+1483075961 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.cpp
 	"Allocator.h"
 
-1480240696 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.h
+1483013633 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\allocator.h
 	"PseudoTable.h"
 	<map>
 
@@ -84,14 +85,14 @@
 	<list>
 	<unordered_map>
 
-1481784816 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
+1483073791 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\pseudoinstruction.h
 	"Utility.h"
 	"Variable.h"
 	"Error.h"
 	"SymbolTable.h"
 	<iomanip>
 
-1481805722 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
+1483013758 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\variable.h
 	"Utility.h"
 	"Symbol.h"
 	"FunctionIdentifier.h"
@@ -124,7 +125,7 @@
 1479454417 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\functionidentifier.cpp
 	"FunctionIdentifier.h"
 
-1481781893 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.cpp
+1483075997 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.cpp
 	"Generator.h"
 
 1481689233 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\generator.h
@@ -169,4 +170,9 @@
 1481781376 c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\dag.h
 	"PseudoTable.h"
 	<set>
+
+1483075997 source:c:\users\yradex\documents\schoolwork\3a\compiler\ccompiler\ccompiler\dag.cpp
+	"Dag.h"
+	<iterator>
+	<fstream>
 

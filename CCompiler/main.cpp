@@ -17,8 +17,8 @@ int main()
 
 	std::cout << "enter file path: " << std::endl;
 	std::string filename;
-	filename = "C:\\Users\\yradex\\Documents\\schoolWork\\3A\\compiler\\compiler_documents\\14061062_test.txt";
-	//std::cin >> filename;
+	//filename = "C:\\Users\\yradex\\Documents\\schoolWork\\3A\\compiler\\compiler_documents\\14061062_test.txt";
+	std::cin >> filename;
 
 	SymbolTable symbol_table;
 	PseudoTable pseudo_table(symbol_table);

@@ -41,7 +41,7 @@ namespace Yradex
 
 				while (_lexical_analyzer.next() != Symbol::identifier)
 				{
-					_error(Error::invalid_identifier);
+					_error(Error::missing_identifier);
 					_lexical_analyzer.skip_this_statement_or_until([](Symbol s) {
 						return SymbolUtilities::is_type_identifier(s) || s == Symbol::comma;
 					});
@@ -144,7 +144,7 @@ namespace Yradex
 				}
 				while (_lexical_analyzer.next() != Symbol::identifier)
 				{
-					_error(Error::invalid_identifier);
+					_error(Error::missing_identifier);
 					_lexical_analyzer.skip_this_statement_or_until([is_start_of_next](Symbol s) {
 						return is_start_of_next(s) || s == Symbol::comma;
 					});
@@ -207,7 +207,7 @@ namespace Yradex
 
 			while (_lexical_analyzer.next() != Symbol::identifier)
 			{
-				_error(Error::invalid_identifier);
+				_error(Error::missing_identifier);
 				_lexical_analyzer.skip_this_statement_or_until([](Symbol s) {
 					return SymbolUtilities::is_type_identifier(s);
 				});
@@ -258,6 +258,14 @@ namespace Yradex
 
 			_debug("Generated function " + name + " of type ", type);
 
+			if (name == "main")
+			{
+				if (_pseudo_table.get_current_function_detail()->get_parameter_list().size())
+				{
+					_error(Error::function_main_not_found);
+				}
+			}
+
 			return name == "main";
 		}
 
@@ -287,7 +295,7 @@ namespace Yradex
 				{
 					if (_lexical_analyzer.next() != Symbol::identifier)
 					{
-						_error(Error::invalid_identifier);
+						_error(Error::missing_identifier);
 						_lexical_analyzer.skip_this_statement_or_until(
 							[is_start_of_next](Symbol s) {return is_start_of_next(s) || s == Symbol::const_symbol || s == Symbol::comma; }
 						);
@@ -427,7 +435,7 @@ namespace Yradex
 
 				if (_lexical_analyzer.next() != Symbol::identifier)
 				{
-					_error(Error::invalid_identifier);
+					_error(Error::missing_identifier);
 					goto error_skip;
 				}
 				else
@@ -483,7 +491,7 @@ namespace Yradex
 
 				while (_lexical_analyzer.next() != Symbol::identifier)
 				{
-					_error(Error::invalid_identifier);
+					_error(Error::missing_identifier);
 					_lexical_analyzer.skip_this_statement_or_until([](Symbol s) {
 						return SymbolUtilities::is_variable_type_identifier(s) || s == Symbol::comma;
 					});
@@ -554,7 +562,7 @@ namespace Yradex
 				_parse_return_statement();
 				break;
 			default:
-				_error(Error::invalid_identifier);
+				_error(Error::missing_identifier);
 				_lexical_analyzer.skip_to_next_statement();
 				break;
 			}
@@ -617,7 +625,7 @@ namespace Yradex
 			}
 			else
 			{
-				_error(Error::invalid_operator);
+				_error(Error::missing_operator);
 				_lexical_analyzer.skip_to_next_statement();
 			}
 		}
@@ -644,7 +652,7 @@ namespace Yradex
 
 				if (_lexical_analyzer.last() != Symbol::identifier)
 				{
-					_error(Error::invalid_identifier);
+					_error(Error::missing_identifier);
 					_lexical_analyzer.skip_to_next_statement();
 					return;
 				}
@@ -754,7 +762,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.last() != Symbol::identifier)
 			{
-				_error(Error::invalid_identifier);
+				_error(Error::missing_identifier);
 				_lexical_analyzer.skip_to_next_statement();
 				return;
 			}
@@ -778,7 +786,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.last() != Symbol::identifier)
 			{
-				_error(Error::invalid_identifier);
+				_error(Error::missing_identifier);
 				_lexical_analyzer.skip_to_next_statement();
 				return;
 			}
@@ -789,7 +797,7 @@ namespace Yradex
 
 			if (_lexical_analyzer.last() != Symbol::identifier)
 			{
-				_error(Error::invalid_identifier);
+				_error(Error::missing_identifier);
 				_lexical_analyzer.skip_to_next_statement();
 				return;
 			}
@@ -802,7 +810,7 @@ namespace Yradex
 			}
 			else if (_lexical_analyzer.last() != Symbol::plus)
 			{
-				_error(Error::invalid_operator);
+				_error(Error::missing_operator);
 				_lexical_analyzer.skip_to_next_statement();
 				return;
 			}
@@ -1187,6 +1195,13 @@ namespace Yradex
 				PseudoOperator op = operator_ == Symbol::asterisk ? PseudoOperator::mul : PseudoOperator::div;
 				PseudoInstruction pi(op, la, ra, res);
 				_insert_instruction(pi);
+				if (operator_ == Symbol::slash)
+				{
+					if (ra->get_variable_type() == Variable::Type::const_variable && ra->get_value() == 0)
+					{
+						_error(Error::devide_by_zero);
+					}
+				}
 			}
 
 			_debug("Generated term");
@@ -1263,7 +1278,10 @@ namespace Yradex
 				break;
 			default:
 				_error(Error::invalid_factor);
-				_lexical_analyzer.skip_to_next_statement();
+				_lexical_analyzer.skip_this_statement_or_until([](Symbol s) {
+					return s == Symbol::left_curly_brace || s == Symbol::right_curly_brace
+						|| s == Symbol::right_parenthesis || s == Symbol::right_square_brace;
+				});
 				return res;
 			}
 
